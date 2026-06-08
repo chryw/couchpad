@@ -32,7 +32,7 @@ On Windows, move the `.exe` to a folder in your `PATH`, or run it directly.
 git clone https://github.com/YOUR_USERNAME/gamepad-mapper.git
 cd gamepad-mapper
 cargo build --release
-# Binary at: target/release/gamepad-mapper(.exe on Windows)
+./target/release/gamepad-mapper --profile vscode
 ```
 
 ## Quick start
