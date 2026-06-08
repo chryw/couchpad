@@ -68,7 +68,22 @@ impl Config {
     "LS": "home",
     "RS": "end"
   },
-  "layer_mappings": {}
+  "layer_mappings": {
+    "A": "super+v",
+    "B": "super+c",
+    "X": "super+x",
+    "Y": "super+a",
+    "DPadUp": "shift+up",
+    "DPadDown": "shift+down",
+    "DPadLeft": "shift+left",
+    "DPadRight": "shift+right",
+    "LB": "super+z",
+    "RB": "super+shift+z",
+    "LT": "super+left",
+    "RT": "super+right",
+    "LS": "super+f",
+    "RS": "super+w"
+  }
 }"#;
 
         fs::write(&config_path, default)
