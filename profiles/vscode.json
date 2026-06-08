@@ -1,0 +1,35 @@
+{
+  "layer_button": "Home",
+  "mappings": {
+    "A": "return",
+    "B": "escape",
+    "Y": "tab",
+    "X": "space",
+    "DPadUp": "up",
+    "DPadDown": "down",
+    "DPadLeft": "left",
+    "DPadRight": "right",
+    "LB": "shift+tab",
+    "RB": "tab",
+    "LT": "super+shift+p",
+    "RT": "super+p",
+    "Select": "super+shift+e",
+    "Start": "super+s",
+    "LS": "super+z",
+    "RS": "super+shift+z"
+  },
+  "layer_mappings": {
+    "A": "super+s",
+    "B": "super+w",
+    "Y": "super+shift+p",
+    "X": "super+n",
+    "DPadUp": "alt+up",
+    "DPadDown": "alt+down",
+    "DPadLeft": "super+shift+[",
+    "DPadRight": "super+shift+]",
+    "LB": "super+shift+z",
+    "RB": "super+z",
+    "Select": "ctrl+super+i",
+    "Start": "super+shift+x"
+  }
+}
