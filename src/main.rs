@@ -1,4 +1,4 @@
-mod config;
+mod profile;
 mod keymap;
 
 #[cfg(target_os = "macos")]
@@ -70,10 +70,10 @@ fn main() {
         .find(|w| w[0] == "--profile")
         .map(|w| w[1].as_str().to_string());
 
-    // Parse --config flag
-    let config_path = args
+    // Parse --file flag (load profile from a specific file path)
+    let file_path = args
         .windows(2)
-        .find(|w| w[0] == "--config")
+        .find(|w| w[0] == "--load")
         .map(|w| PathBuf::from(&w[1]));
 
     // Parse --layout override (auto-detected from controller if not specified)
@@ -90,7 +90,7 @@ fn main() {
 
     // Handle --list flag
     if args.iter().any(|a| a == "--list") {
-        match config::Config::list_profiles() {
+        match profile::Profile::list_all() {
             Ok(profiles) => {
                 if profiles.is_empty() {
                     println!("No profiles found. Run with --init to create one.");
@@ -133,9 +133,9 @@ fn main() {
 
     // Handle --init flag
     if args.iter().any(|a| a == "--init") {
-        match config::Config::create_default(profile.as_deref()) {
+        match profile::Profile::create_default(profile.as_deref()) {
             Ok(path) => {
-                println!("✓ Created config at: {}", path.display());
+                println!("✓ Created profile at: {}", path.display());
                 println!("  Edit it to customize your button mappings.");
             }
             Err(e) => {
@@ -148,19 +148,19 @@ fn main() {
 
     // Handle --info flag
     if args.iter().any(|a| a == "--info") {
-        print_info(profile.as_deref(), config_path.clone(), layout_override);
+        print_info(profile.as_deref(), file_path.clone(), layout_override);
         return;
     }
 
     // Handle --validate flag
     if args.iter().any(|a| a == "--validate") {
-        validate_profile(profile.as_deref(), config_path);
+        validate_profile(profile.as_deref(), file_path);
         return;
     }
 
     // Handle --edit flag
     if args.iter().any(|a| a == "--edit") {
-        open_config(profile.as_deref());
+        open_profile(profile.as_deref());
         return;
     }
 
@@ -172,17 +172,17 @@ fn main() {
 
     // Handle --test flag
     if args.iter().any(|a| a == "--test") {
-        run_test_mode(profile.as_deref(), config_path, layout_override);
+        run_test_mode(profile.as_deref(), file_path, layout_override);
         return;
     }
 
     // Run the mapper
-    run_mapper(profile.as_deref(), config_path, layout_override);
+    run_mapper(profile.as_deref(), file_path, layout_override);
 }
 
-fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
-    // Load config
-    let cfg = match config::Config::load_profile(profile, config_path) {
+fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override: Option<Layout>) {
+    // Load profile
+    let cfg = match profile::Profile::load(profile, file_path) {
         Ok(c) => c,
         Err(e) => {
             eprintln!("Error: {}", e);
@@ -398,8 +398,8 @@ fn button_display_name(button: Button, layout: Layout) -> &'static str {
     }
 }
 
-/// Get the config-canonical name for a button (always Xbox convention)
-fn button_config_name(button: Button) -> &'static str {
+/// Get the canonical name for a button (always Xbox convention, used in profiles)
+fn button_canonical_name(button: Button) -> &'static str {
     match button {
         Button::South => "A",
         Button::East => "B",
@@ -430,11 +430,11 @@ fn face_button_labels(layout: Layout) -> [&'static str; 4] {
     }
 }
 
-fn validate_profile(profile: Option<&str>, config_path: Option<PathBuf>) {
-    let config = match config::Config::load_profile(profile, config_path) {
-        Ok(cfg) => cfg,
+fn validate_profile(profile: Option<&str>, file_path: Option<PathBuf>) {
+    let prof = match profile::Profile::load(profile, file_path) {
+        Ok(p) => p,
         Err(e) => {
-            eprintln!("✗ Failed to load config: {}", e);
+            eprintln!("✗ Failed to load profile: {}", e);
             std::process::exit(1);
         }
     };
@@ -444,12 +444,12 @@ fn validate_profile(profile: Option<&str>, config_path: Option<PathBuf>) {
     let mut warnings: Vec<String> = Vec::new();
 
     // Validate layer button
-    if parse_button(&config.layer_button).is_none() {
-        errors.push(format!("layer_button: unknown button \"{}\"", config.layer_button));
+    if parse_button(&prof.layer_button).is_none() {
+        errors.push(format!("layer_button: unknown button \"{}\"", prof.layer_button));
     }
 
     // Validate base mappings
-    for (button, combo) in &config.mappings {
+    for (button, combo) in &prof.mappings {
         if parse_button(button).is_none() {
             errors.push(format!("mappings: unknown button \"{}\"", button));
         }
@@ -459,7 +459,7 @@ fn validate_profile(profile: Option<&str>, config_path: Option<PathBuf>) {
     }
 
     // Validate layer mappings
-    for (button, combo) in &config.layer_mappings {
+    for (button, combo) in &prof.layer_mappings {
         if parse_button(button).is_none() {
             errors.push(format!("layer_mappings: unknown button \"{}\"", button));
         }
@@ -469,21 +469,21 @@ fn validate_profile(profile: Option<&str>, config_path: Option<PathBuf>) {
     }
 
     // Check for duplicate button in both layers (warning, not error)
-    for button in config.mappings.keys() {
-        if config.layer_mappings.contains_key(button) {
+    for button in prof.mappings.keys() {
+        if prof.layer_mappings.contains_key(button) {
             // This is actually fine — base vs layer are separate
         }
     }
 
     // Check for layer button also mapped
-    if config.mappings.contains_key(&config.layer_button) {
-        warnings.push(format!("layer_button \"{}\" is also mapped in base layer (it will only activate the layer)", config.layer_button));
+    if prof.mappings.contains_key(&prof.layer_button) {
+        warnings.push(format!("layer_button \"{}\" is also mapped in base layer (it will only activate the layer)", prof.layer_button));
     }
 
     // Report results
     if errors.is_empty() && warnings.is_empty() {
         println!("✓ Profile is valid ({} base + {} layer mappings)",
-            config.mappings.len(), config.layer_mappings.len());
+            prof.mappings.len(), prof.layer_mappings.len());
     } else {
         if !errors.is_empty() {
             eprintln!("✗ {} error(s):", errors.len());
@@ -503,13 +503,13 @@ fn validate_profile(profile: Option<&str>, config_path: Option<PathBuf>) {
     }
 }
 
-fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
+fn run_test_mode(profile: Option<&str>, file_path: Option<PathBuf>, layout_override: Option<Layout>) {
     let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
 
     let layout = detect_layout(&gilrs, layout_override);
 
-    // Load config to show mapped keys
-    let mappings: HashMap<String, String> = match config::Config::load_profile(profile, config_path) {
+    // Load profile to show mapped keys
+    let mappings: HashMap<String, String> = match profile::Profile::load(profile, file_path) {
         Ok(cfg) => cfg.mappings,
         Err(_) => HashMap::new(),
     };
@@ -552,11 +552,11 @@ fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>, layout_ove
     }
 }
 
-fn print_info(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
+fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override: Option<Layout>) {
     let gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
 
     let layout = detect_layout(&gilrs, layout_override);
-    let cfg = config::Config::load_profile(profile, config_path).ok();
+    let cfg = profile::Profile::load(profile, file_path).ok();
     let profile_name = profile.unwrap_or("default");
 
     println!("┌─────────────────────────────────────────────────────┐");
@@ -634,7 +634,7 @@ fn print_info(profile: Option<&str>, config_path: Option<PathBuf>, layout_overri
             println!("\n  Hold [{}] + button for layer actions.", cfg.layer_button);
         }
     } else {
-        println!("  No config loaded for profile '{}'.", profile_name);
+        println!("  No profile loaded for '{}'.", profile_name);
     }
 }
 
@@ -643,7 +643,7 @@ fn print_help() {
     println!("   Map game controller buttons to keyboard shortcuts.\n");
     print!("{}", include_str!("../docs/help/usage.md"));
     println!();
-    print!("{}", include_str!("../docs/help/config.md"));
+    print!("{}", include_str!("../docs/help/profile-format.md"));
     println!();
     print!("{}", include_str!("../docs/help/buttons.md"));
     println!();
@@ -654,11 +654,11 @@ fn print_help() {
     print!("{}", include_str!("../docs/help/tips.md"));
 }
 
-fn open_config(profile: Option<&str>) {
-    let path = config::profile_path(profile.unwrap_or("default"));
+fn open_profile(profile: Option<&str>) {
+    let path = profile::profile_path(profile.unwrap_or("default"));
 
     if !path.exists() {
-        eprintln!("Config not found: {}", path.display());
+        eprintln!("Profile not found: {}", path.display());
         eprintln!("Run with --init to create it first.");
         std::process::exit(1);
     }
@@ -812,12 +812,12 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         }
 
         if let Some(button) = detected_button {
-            // Always save Xbox-convention names in config (layout-independent)
-            let config_name = button_config_name(button);
+            // Always save Xbox-convention names (layout-independent)
+            let canonical = button_canonical_name(button);
             let display_name = button_display_name(button, layout);
             println!("    ✓ Detected: {}", display_name);
             println!("    ✓ Mapped: {} → {}\n", display_name, combo);
-            mappings.insert(config_name.to_string(), combo.to_string());
+            mappings.insert(canonical.to_string(), combo.to_string());
         }
     }
 
@@ -826,31 +826,31 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         return;
     }
 
-    // Save the config
-    let config_path = config::profile_path(profile_name);
-    if let Some(parent) = config_path.parent() {
+    // Save the profile
+    let save_path = profile::profile_path(profile_name);
+    if let Some(parent) = save_path.parent() {
         std::fs::create_dir_all(parent).ok();
     }
 
-    let cfg = config::Config {
+    let prof = profile::Profile {
         mappings,
         layer_mappings: HashMap::new(),
         layer_button: "Home".to_string(),
     };
 
-    let json = match serde_json::to_string_pretty(&cfg) {
+    let json = match serde_json::to_string_pretty(&prof) {
         Ok(j) => j,
         Err(e) => {
-            eprintln!("\n  ✗ Failed to serialize config: {}", e);
+            eprintln!("\n  ✗ Failed to serialize profile: {}", e);
             std::process::exit(1);
         }
     };
 
-    if let Err(e) = std::fs::write(&config_path, json) {
-        eprintln!("\n  ✗ Failed to write config: {}", e);
+    if let Err(e) = std::fs::write(&save_path, json) {
+        eprintln!("\n  ✗ Failed to write profile: {}", e);
         std::process::exit(1);
     }
 
-    println!("\n  ✓ Saved {} mapping(s) to: {}", cfg.mappings.len(), config_path.display());
+    println!("\n  ✓ Saved {} mapping(s) to: {}", prof.mappings.len(), save_path.display());
     println!("    Run with: gamepad-mapper --profile {}", profile_name);
 }

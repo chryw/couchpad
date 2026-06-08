@@ -32,14 +32,20 @@ cargo build --release
 ## Quick Start
 
 ```bash
-# 1. Create a default config
+# 1. Create a default profile
 gamepad-mapper --init
 
 # 2. Interactive setup (pick actions, press buttons)
 gamepad-mapper --setup
 
-# 3. Or just run with the default profile
+# 3. Run
 gamepad-mapper
+```
+
+Or use a built-in profile:
+```bash
+cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json
+gamepad-mapper --profile vscode
 ```
 
 ## Usage
@@ -48,41 +54,26 @@ gamepad-mapper
 gamepad-mapper [OPTIONS]
 
 OPTIONS:
-  (no flags)             Start the mapper with the default profile
-  --profile <name>       Use a specific profile
+  (no flags)             Start with the default profile
+  --profile <name>       Use a named profile
   --layout <type>        Override controller layout (xbox or switch)
   --setup                Interactive setup wizard
-  --init                 Create a new profile config file
-  --edit                 Open config in your default editor
-  --info                 Show controller info and keymap table
+  --init                 Create a new profile
+  --edit                 Open profile in your default editor
+  --validate             Check profile for errors
+  --info                 Show controller info and current mappings
   --test                 Test mode: show button presses
   --list                 List and pick a profile to run
-  --config <path>        Use a custom config file path
+  --load <path>          Load a profile from a specific file path
   --help, -h             Show full help
-```
-
-## Profiles
-
-Ready-to-use profiles in [`profiles/`](profiles/):
-
-| Profile | Use Case |
-|---------|----------|
-| [`default.json`](profiles/default.json) | Generic navigation — browse, scroll, tabs, clipboard |
-| [`vscode.json`](profiles/vscode.json) | VS Code vibe coding with Copilot Chat |
-
-Copy to your config directory and run:
-```bash
-cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json
-gamepad-mapper --profile vscode
 ```
 
 ## Documentation
 
-| Doc | Description |
-|-----|-------------|
-| [Configuration](docs/configuration.md) | Config format, button names, key names, layers, cross-platform |
+| Doc | What's in it |
+|-----|--------------|
+| [Configuration](docs/configuration.md) | Profile format, built-in profiles, button/key reference, layers |
 | [VS Code Guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
-| [Profiles](docs/profiles.md) | Profile installation and descriptions |
 
 ## Permissions
 

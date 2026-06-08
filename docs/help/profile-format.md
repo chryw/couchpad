@@ -1,9 +1,9 @@
-CONFIG:
+PROFILE FORMAT:
   Profiles are stored in:
-    macOS:   ~/Library/Application Support/gamepad-mapper/<profile>.json
-    Windows: %APPDATA%/gamepad-mapper/<profile>.json
+    macOS:   ~/Library/Application Support/gamepad-mapper/<name>.json
+    Windows: %APPDATA%/gamepad-mapper/<name>.json
 
-  Config format:
+  Format:
   {
     "layer_button": "Home",
     "mappings": {

@@ -4,7 +4,7 @@ use std::fs;
 use std::path::PathBuf;
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Config {
+pub struct Profile {
     /// Map of button names to key combos (e.g., "A" -> "return", "LT" -> "super+shift+p")
     pub mappings: HashMap<String, String>,
     /// Alternate mappings when the layer modifier button is held
@@ -19,33 +19,33 @@ fn default_layer_button() -> String {
     "Home".to_string()
 }
 
-impl Config {
-    pub fn load_profile(profile: Option<&str>, path: Option<PathBuf>) -> Result<Self, String> {
-        let config_path = match path {
+impl Profile {
+    pub fn load(name: Option<&str>, path: Option<PathBuf>) -> Result<Self, String> {
+        let file_path = match path {
             Some(p) => p,
-            None => profile_path(profile.unwrap_or("default")),
+            None => profile_path(name.unwrap_or("default")),
         };
 
-        if !config_path.exists() {
+        if !file_path.exists() {
             return Err(format!(
-                "Config file not found: {}\nRun with --init to create a default config, or --profile <name> --init to create a named profile.",
-                config_path.display()
+                "Profile not found: {}\nRun with --init to create a default profile, or --profile <name> --init to create a named one.",
+                file_path.display()
             ));
         }
 
-        let content = fs::read_to_string(&config_path)
-            .map_err(|e| format!("Failed to read config: {}", e))?;
+        let content = fs::read_to_string(&file_path)
+            .map_err(|e| format!("Failed to read profile: {}", e))?;
 
         serde_json::from_str(&content)
-            .map_err(|e| format!("Failed to parse config: {}", e))
+            .map_err(|e| format!("Failed to parse profile: {}", e))
     }
 
-    pub fn create_default(profile: Option<&str>) -> Result<PathBuf, String> {
-        let config_path = profile_path(profile.unwrap_or("default"));
+    pub fn create_default(name: Option<&str>) -> Result<PathBuf, String> {
+        let file_path = profile_path(name.unwrap_or("default"));
 
-        if let Some(parent) = config_path.parent() {
+        if let Some(parent) = file_path.parent() {
             fs::create_dir_all(parent)
-                .map_err(|e| format!("Failed to create config directory: {}", e))?;
+                .map_err(|e| format!("Failed to create profiles directory: {}", e))?;
         }
 
         let default = r#"{
@@ -86,21 +86,21 @@ impl Config {
   }
 }"#;
 
-        fs::write(&config_path, default)
-            .map_err(|e| format!("Failed to write config: {}", e))?;
+        fs::write(&file_path, default)
+            .map_err(|e| format!("Failed to write profile: {}", e))?;
 
-        Ok(config_path)
+        Ok(file_path)
     }
 
-    pub fn list_profiles() -> Result<Vec<String>, String> {
-        let profiles_dir = config_dir();
-        if !profiles_dir.exists() {
+    pub fn list_all() -> Result<Vec<String>, String> {
+        let dir = profiles_dir();
+        if !dir.exists() {
             return Ok(vec![]);
         }
 
         let mut profiles = Vec::new();
-        let entries = fs::read_dir(&profiles_dir)
-            .map_err(|e| format!("Failed to read config directory: {}", e))?;
+        let entries = fs::read_dir(&dir)
+            .map_err(|e| format!("Failed to read profiles directory: {}", e))?;
 
         for entry in entries {
             let entry = entry.map_err(|e| format!("Failed to read entry: {}", e))?;
@@ -117,12 +117,12 @@ impl Config {
     }
 }
 
-fn config_dir() -> PathBuf {
+fn profiles_dir() -> PathBuf {
     dirs::config_dir()
         .unwrap_or_else(|| PathBuf::from("."))
         .join("gamepad-mapper")
 }
 
 pub fn profile_path(name: &str) -> PathBuf {
-    config_dir().join(format!("{}.json", name))
+    profiles_dir().join(format!("{}.json", name))
 }

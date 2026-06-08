@@ -26,32 +26,31 @@ cargo run -- --test      # Test with a connected controller
 ```
 src/
   main.rs              CLI logic, arg parsing, event loop, setup wizard
-  config.rs            Profile loading/saving, path resolution
+  profile.rs           Profile loading/saving, path resolution
   keymap.rs            Key name → keycode mappings, combo parsing
   emitter_macos.rs     macOS CGEvent key simulation
   emitter_windows.rs   Windows SendInput key simulation
 docs/
   help/                Plain text fragments embedded in --help via include_str!()
-  configuration.md     Config reference (web docs)
+  configuration.md     Profile format and reference (web docs)
   vscode-guide.md      VS Code vibe coding guide (web docs)
-profiles/              Example profile JSON files
+profiles/              Built-in profile JSON files
 ```
 
 ## Adding a Key
 
-1. Add the keycode to `src/keymap.rs` in `build_keycode_map()`
-2. Add the Windows VK code to `src/emitter_windows.rs` in `build_vk_map()`
-3. Update `docs/help/keys.md` with the new key name
+1. Add the keycode to `src/keymap.rs` in the platform-specific `build_keycode_map_*()` functions
+2. Update `docs/help/keys.md` with the new key name
 
 ## Adding a Profile
 
 1. Create a new JSON file in `profiles/`
-2. Add a description to `docs/profiles.md`
+2. Add a description to the "Using Built-in Profiles" section in `docs/configuration.md`
 3. Optionally add a dedicated guide in `docs/`
 
 ## Guidelines
 
 - No panics in production paths — use graceful error messages
-- Config always uses Xbox button convention (A=bottom, B=right, X=left, Y=top)
+- Profiles always use Xbox button convention (A=bottom, B=right, X=left, Y=top)
 - `super` modifier for cross-platform shortcuts
 - Test with a real controller before submitting controller-related changes

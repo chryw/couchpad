@@ -20,14 +20,14 @@ GETTING STARTED:
     $ gamepad-mapper --setup             # Pick actions, press buttons
 
     Option B — Manual setup:
-    $ gamepad-mapper --init              # Create default config
+    $ gamepad-mapper --init              # Create default profile
     $ gamepad-mapper --info              # Verify controller is detected
     $ gamepad-mapper --test              # Press buttons to see their names
-    $ gamepad-mapper --edit              # Open config to customize
+    $ gamepad-mapper --edit              # Open profile to customize
 
   Step 3: Customize your mappings
   ─────────────────────────────────────────
-    Edit the config file shown by --info. Map button names (from --test)
+    Edit the profile file shown by --info. Map button names (from --test)
     to key combos you want to emit.
 
   Step 4: Grant permissions (macOS only)
