@@ -21,7 +21,7 @@ cargo run -- --help      # Run with arguments
 cargo run -- --test      # Test with a connected controller
 ```
 
-## Project Structure
+## Project structure
 
 ```
 src/
@@ -37,12 +37,12 @@ docs/
 profiles/              Built-in profile JSON files
 ```
 
-## Adding a Key
+## Adding a key
 
 1. Add the keycode to `src/keymap.rs` in the platform-specific `build_keycode_map_*()` functions
 2. Update `docs/help/keys.md` with the new key name
 
-## Adding a Profile
+## Adding a profile
 
 1. Create a new JSON file in `profiles/`
 2. Add a description to the "Using Built-in Profiles" section in `docs/profile-reference.md`

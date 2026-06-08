@@ -1,4 +1,4 @@
-# VS Code + Controller (Vibe Coding Guide)
+# VS Code + controller (vibe coding guide)
 
 Use a game controller to drive VS Code with GitHub Copilot Chat — no keyboard needed for the AI-assisted coding workflow.
 
@@ -44,7 +44,7 @@ gamepad-mapper --profile vscode
 
 ## Keymap
 
-### Base Layer (normal presses)
+### Base layer (normal presses)
 
 | Button | Action | VS Code Function |
 |--------|--------|------------------|
@@ -81,7 +81,7 @@ gamepad-mapper --profile vscode
 | Select | Extensions | `Cmd+Shift+X` |
 | Start | New file | `Cmd+N` |
 
-## Voice Input
+## Voice input
 
 ### VS Code Speech (recommended)
 
@@ -104,7 +104,7 @@ With `keywordActivation` enabled, just say **"Hey Code"** and start talking — 
 
 With `autoSynthesize` enabled, Copilot reads its responses aloud.
 
-### macOS Dictation (alternative)
+### macOS dictation (alternative)
 
 If you prefer system-wide dictation:
 1. System Settings → Keyboard → Dictation → Enable

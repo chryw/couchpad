@@ -29,7 +29,7 @@ cargo build --release
 # Binary at: target/release/gamepad-mapper
 ```
 
-## Quick Start
+## Quick start
 
 ```bash
 # 1. Create a default profile
@@ -72,8 +72,8 @@ OPTIONS:
 
 | Doc | What's in it |
 |-----|--------------|
-| [Profile Reference](docs/profile-reference.md) | Profile format, built-in profiles, button/key names, layers |
-| [VS Code Guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
+| [Profile reference](docs/profile-reference.md) | Profile format, built-in profiles, button/key names, layers |
+| [VS Code guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
 
 ## Permissions
 

@@ -1,6 +1,6 @@
-# Profile Reference
+# Profile reference
 
-## Profile Location
+## Profile location
 
 Profiles are JSON files stored in:
 - **macOS:** `~/Library/Application Support/gamepad-mapper/<name>.json`
@@ -8,7 +8,7 @@ Profiles are JSON files stored in:
 
 Use `--profile <name>` to select a profile. Omit it to use `default.json`.
 
-## Getting Started
+## Getting started
 
 ```bash
 # Create a default profile
@@ -21,7 +21,7 @@ gamepad-mapper --setup
 gamepad-mapper --profile vscode --init
 ```
 
-## Using Built-in Profiles
+## Using built-in profiles
 
 Ready-to-use profiles ship in the [`profiles/`](../profiles/) directory:
 
@@ -45,21 +45,21 @@ Then run:
 gamepad-mapper --profile vscode
 ```
 
-### `default.json` — Generic Navigation
+### `default.json` — Generic navigation
 
 Designed for browsing, reading, and general app navigation. No app-specific shortcuts.
 
 - **Base layer:** Enter, Escape, Space, Backspace, Arrows, Prev/Next tab, Page Up/Down, Home/End
 - **Layer (Home+):** Paste, Copy, Ctrl+C, Select All, Tab switching, Back/Forward, Undo/Redo, Zoom, Find, Close tab
 
-### `vscode.json` — VS Code Vibe Coding
+### `vscode.json` — VS Code vibe coding
 
 Optimized for Copilot Chat-driven coding. The workflow: open chat → speak/type prompt → accept suggestions → save.
 
 - **Base layer:** Enter, Escape, Tab (accept), Copilot Chat (LT), Quick Open (RT), Undo/Redo, Save
 - **Layer (Home+):** Close tab, Terminal, Interrupt, Command Palette, Run (F5), Find, Switch tabs
 
-## Profile Format
+## Profile format
 
 ```json
 {
@@ -83,13 +83,13 @@ Optimized for Copilot Chat-driven coding. The workflow: open chat → speak/type
 | `mappings` | Button → key combo mappings for the base layer |
 | `layer_mappings` | Button → key combo mappings when layer button is held |
 
-## Layer System
+## Layer system
 
 Hold the layer button (default: `Home`) + press another button for alternate mappings. This doubles your available actions without needing more buttons.
 
 Example: `Home + A` sends `super+s` (Save) while `A` alone sends `return`.
 
-## Button Names
+## Button names
 
 Profiles always use Xbox-convention names regardless of which controller is connected:
 
@@ -108,12 +108,12 @@ Profiles always use Xbox-convention names regardless of which controller is conn
 
 The app auto-detects your controller type and shows the correct labels in the UI. Use `--layout switch` to override.
 
-## Key Names
+## Key names
 
-### Letters & Numbers
+### Letters and numbers
 `a`–`z`, `0`–`9`
 
-### Special Keys
+### Special keys
 | Key | Aliases |
 |-----|---------|
 | `return` | `enter` |
@@ -127,10 +127,10 @@ The app auto-detects your controller type and shows the correct labels in the UI
 | `pageup` | |
 | `pagedown` | |
 
-### Arrow Keys
+### Arrow keys
 `up`, `down`, `left`, `right`
 
-### Function Keys
+### Function keys
 `f1`–`f12`
 
 ### Punctuation
@@ -145,7 +145,7 @@ The app auto-detects your controller type and shows the correct labels in the UI
 | `shift` | | Shift (⇧) | Shift |
 | `cmd` | `command` | Cmd (⌘) | Win |
 
-### Cross-Platform Modifier
+### Cross-platform modifier
 
 Use `super` for the primary platform modifier — it maps to `Cmd` on macOS and `Ctrl` on Windows. This lets one profile work on both platforms:
 
@@ -154,7 +154,7 @@ Use `super` for the primary platform modifier — it maps to `Cmd` on macOS and 
 ```
 → `Cmd+S` on macOS, `Ctrl+S` on Windows.
 
-## Key Combo Syntax
+## Key combo syntax
 
 Combine modifiers with `+`:
 
@@ -165,7 +165,7 @@ ctrl+`            → Ctrl+` (Toggle Terminal)
 alt+up            → Option+Up (Move Line Up)
 ```
 
-## Controller Layout
+## Controller layout
 
 The app auto-detects Xbox vs Nintendo Switch controllers based on the device name. The layout only affects display labels — profiles always use Xbox convention.
 
@@ -173,7 +173,7 @@ To override: `gamepad-mapper --layout switch`
 
 Detected as Switch: controllers with "Nintendo", "Switch", "Pro Controller", or "Joy-Con" in the name.
 
-## Creating Your Own Profile
+## Creating your own profile
 
 ```bash
 # Start from an existing profile
