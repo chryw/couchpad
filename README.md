@@ -10,20 +10,24 @@ Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input
 
 1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
 
-2. Download the binary for your platform from [Releases](../../releases) and open a terminal:
+2. Install — pick one:
 
+   **One-liner (macOS):**
    ```bash
-   # macOS / Linux
-   chmod +x gamepad-mapper-macos-arm64
-   ./gamepad-mapper-macos-arm64 --install
+   curl -fsSL https://github.com/YOUR_USERNAME/gamepad-mapper/releases/latest/download/gamepad-mapper-macos-arm64 -o /tmp/gm && chmod +x /tmp/gm && /tmp/gm --install && rm /tmp/gm
    ```
 
+   **Manual download:** Grab the binary from [Releases](../../releases), then:
+   ```bash
+   # macOS
+   chmod +x gamepad-mapper-macos-arm64 && ./gamepad-mapper-macos-arm64 --install
+   ```
    ```powershell
    # Windows (PowerShell)
    .\gamepad-mapper-windows-x86_64.exe --install
    ```
 
-   This copies the binary to your PATH so you can run `gamepad-mapper` from anywhere.
+   `--install` copies the binary to your PATH so you can run `gamepad-mapper` from anywhere.
 
 3. Run it:
 
