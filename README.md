@@ -111,8 +111,50 @@ System Settings → Privacy & Security → Accessibility
 ## Example Profiles
 
 See the [`profiles/`](profiles/) directory for ready-to-use configs:
-- `default.json` — Basic mapping
-- `vscode.json` — VS Code vibe coding with Copilot
+- `default.json` — Generic navigation (browse, scroll, tabs, clipboard)
+- `vscode.json` — VS Code vibe coding with Copilot Chat
+
+## VS Code + Controller (Vibe Coding)
+
+Use a game controller to drive VS Code with Copilot Chat — no keyboard needed for the AI-assisted workflow.
+
+### Setup
+
+1. Install the [VS Code Speech](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-speech) extension for voice input
+2. Copy the vscode profile: `cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json`
+3. Run: `gamepad-mapper --profile vscode`
+
+### Workflow
+
+1. **LT** → Open Copilot Chat
+2. **Speak** your prompt (via VS Code Speech, or use macOS dictation)
+3. **A** (Enter) → Send message
+4. **DPad** → Scroll through the response
+5. **Y/RB** (Tab) → Accept Copilot's suggestion
+6. **Start** → Save
+7. **LS** → Undo if something went wrong
+
+### Keymap (vscode profile)
+
+| Button | Normal | Layer (Home+) |
+|--------|--------|---------------|
+| A | Enter (send/confirm) | Save |
+| B | Escape (dismiss) | Close tab |
+| X | Space | Ctrl+C (interrupt) |
+| Y | Tab (accept suggestion) | Toggle terminal |
+| DPad | Navigate | Switch tabs / Back-Forward |
+| LB/RB | Shift+Tab / Tab | Undo / Redo |
+| LT | **Copilot Chat** | Command Palette |
+| RT | Quick Open (files) | Run (F5) |
+| LS/RS | Undo / Redo | Find / Toggle comment |
+| Select | Explorer sidebar | Extensions |
+| Start | Save | New file |
+
+### Tips
+
+- **Voice input:** With VS Code Speech installed, click the mic icon in chat or press `⌥⌘V` to dictate. Pair with the controller for a fully hands-free coding experience.
+- **"Hey Code":** Enable `accessibility.voice.keywordActivation` in VS Code settings to start chat by saying "Hey Code" — no button press needed.
+- **Controller layout:** The app auto-detects Xbox vs Nintendo Switch button labels. Use `--layout switch` to override.
 
 ## License
 
