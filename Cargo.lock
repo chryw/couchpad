@@ -67,6 +67,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "couchpad"
+version = "0.1.0"
+dependencies = [
+ "core-graphics",
+ "core-graphics-types",
+ "dirs",
+ "gilrs",
+ "serde",
+ "serde_json",
+ "winapi",
+]
+
+[[package]]
 name = "dirs"
 version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -142,19 +155,6 @@ dependencies = [
  "futures-task",
  "pin-project-lite",
  "slab",
-]
-
-[[package]]
-name = "gamepad-mapper"
-version = "0.1.0"
-dependencies = [
- "core-graphics",
- "core-graphics-types",
- "dirs",
- "gilrs",
- "serde",
- "serde_json",
- "winapi",
 ]
 
 [[package]]

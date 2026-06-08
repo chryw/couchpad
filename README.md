@@ -1,4 +1,4 @@
-# 🎮 Gamepad Mapper
+# 🎮 Couchpad
 
 A minimal command-line tool that maps game controller buttons to keyboard shortcuts. Runs in a terminal alongside your editor. Built in Rust, works on macOS and Windows.
 
@@ -14,23 +14,23 @@ Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input
 
    **macOS (Apple Silicon):**
    ```bash
-   curl -fsSL https://github.com/YOUR_USERNAME/gamepad-mapper/releases/latest/download/gamepad-mapper-macos-arm64 -o /usr/local/bin/gamepad-mapper && chmod +x /usr/local/bin/gamepad-mapper
+   curl -fsSL https://github.com/YOUR_USERNAME/couchpad/releases/latest/download/couchpad-macos-arm64 -o /usr/local/bin/couchpad && chmod +x /usr/local/bin/couchpad
    ```
 
    **macOS (Intel):**
    ```bash
-   curl -fsSL https://github.com/YOUR_USERNAME/gamepad-mapper/releases/latest/download/gamepad-mapper-macos-x86_64 -o /usr/local/bin/gamepad-mapper && chmod +x /usr/local/bin/gamepad-mapper
+   curl -fsSL https://github.com/YOUR_USERNAME/couchpad/releases/latest/download/couchpad-macos-x86_64 -o /usr/local/bin/couchpad && chmod +x /usr/local/bin/couchpad
    ```
 
    **Windows (PowerShell):**
    ```powershell
-   Invoke-WebRequest -Uri "https://github.com/YOUR_USERNAME/gamepad-mapper/releases/latest/download/gamepad-mapper-windows-x86_64.exe" -OutFile "$env:LOCALAPPDATA\gamepad-mapper.exe"
+   Invoke-WebRequest -Uri "https://github.com/YOUR_USERNAME/couchpad/releases/latest/download/couchpad-windows-x86_64.exe" -OutFile "$env:LOCALAPPDATA\couchpad.exe"
    ```
 
 3. Run:
 
    ```bash
-   gamepad-mapper
+   couchpad
    ```
 
    On first run, you'll be prompted to choose: interactive wizard, a pre-made VS Code profile, or basic defaults.
@@ -45,8 +45,8 @@ Keep the terminal open — the tool runs in the foreground and maps buttons unti
 Requires [Rust](https://rustup.rs/).
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/gamepad-mapper.git
-cd gamepad-mapper
+git clone https://github.com/YOUR_USERNAME/couchpad.git
+cd couchpad
 cargo build --release
 cargo install --path .
 ```

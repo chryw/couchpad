@@ -186,7 +186,7 @@ fn main() {
     // First-run experience: if no explicit profile/flags given and no user profile on disk,
     // offer a friendly onboarding choice instead of silently using the built-in default.
     if profile.is_none() && file_path.is_none() && !profile::profile_path("default").exists() {
-        println!("🎮 Welcome to Gamepad Mapper!\n");
+        println!("🎮 Welcome to Couchpad!\n");
         println!("  Looks like your first time. How would you like to start?\n");
         println!("   [1] Interactive wizard — pick actions, press buttons to bind");
         println!("   [2] Use the VS Code profile — pre-made for Copilot Chat");
@@ -284,7 +284,7 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
 
     // Print welcome banner
     println!("┌─────────────────────────────────────────────────────┐");
-    println!("│  🎮 Gamepad Mapper                                  │");
+    println!("│  🎮 Couchpad                                  │");
     println!("├─────────────────────────────────────────────────────┤");
     println!("│  Profile: {:<41}│", profile.unwrap_or("default"));
     println!("│  Layout:  {:<41}│", layout.name());
@@ -598,7 +598,7 @@ fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
     let profile_name = profile.unwrap_or("default");
 
     println!("┌─────────────────────────────────────────────────────┐");
-    println!("│  🎮 Gamepad Mapper                                  │");
+    println!("│  🎮 Couchpad                                  │");
     println!("├─────────────────────────────────────────────────────┤");
     println!("│  Profile: {:<41}│", profile_name);
     let user_path = profile::profile_path(profile_name);
@@ -683,7 +683,7 @@ fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
 }
 
 fn print_help() {
-    println!("🎮 Gamepad Mapper");
+    println!("🎮 Couchpad");
     println!("   Map game controller buttons to keyboard shortcuts.\n");
     print!("{}", include_str!("../docs/help/usage.md"));
     println!();
@@ -694,7 +694,7 @@ fn print_help() {
     print!("{}", include_str!("../docs/help/keys.md"));
     println!();
     println!("MORE INFO:");
-    println!("  https://github.com/YOUR_USERNAME/gamepad-mapper#readme");
+    println!("  https://github.com/YOUR_USERNAME/couchpad#readme");
 }
 
 fn self_install() {
@@ -718,7 +718,7 @@ fn self_install() {
         return;
     }
 
-    println!("🎮 Gamepad Mapper — Install\n");
+    println!("🎮 Couchpad — Install\n");
     println!("  Current location: {}", current_exe.display());
     println!("  Install to:       {}", install_path.display());
     println!();
@@ -775,7 +775,7 @@ fn self_install() {
         }
     }
 
-    println!("\n  Run 'gamepad-mapper' to get started.");
+    println!("\n  Run 'couchpad' to get started.");
 }
 
 #[cfg(target_os = "macos")]
@@ -796,7 +796,7 @@ fn install_target_dir() -> PathBuf {
 }
 
 fn install_binary_name() -> &'static str {
-    if cfg!(windows) { "gamepad-mapper.exe" } else { "gamepad-mapper" }
+    if cfg!(windows) { "couchpad.exe" } else { "couchpad" }
 }
 
 fn open_profile(profile: Option<&str>) {
@@ -869,7 +869,7 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
     let profile_name = profile.unwrap_or("default");
 
     println!("┌─────────────────────────────────────────────────────┐");
-    println!("│  🎮 Gamepad Mapper — Interactive Setup               │");
+    println!("│  🎮 Couchpad — Interactive Setup               │");
     println!("├─────────────────────────────────────────────────────┤");
     println!("│  Profile: {:<41}│", profile_name);
     println!("└─────────────────────────────────────────────────────┘");
@@ -997,5 +997,5 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
     }
 
     println!("\n  ✓ Saved {} mapping(s) to: {}", prof.mappings.len(), save_path.display());
-    println!("    Run with: gamepad-mapper --profile {}", profile_name);
+    println!("    Run with: couchpad --profile {}", profile_name);
 }

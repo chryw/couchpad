@@ -139,7 +139,7 @@ impl Profile {
 fn profiles_dir() -> PathBuf {
     dirs::config_dir()
         .unwrap_or_else(|| PathBuf::from("."))
-        .join("gamepad-mapper")
+        .join("couchpad")
 }
 
 pub fn profile_path(name: &str) -> PathBuf {

@@ -1,7 +1,7 @@
 PROFILE FORMAT:
   Profiles are stored in:
-    macOS:   ~/Library/Application Support/gamepad-mapper/<name>.json
-    Windows: %APPDATA%/gamepad-mapper/<name>.json
+    macOS:   ~/Library/Application Support/couchpad/<name>.json
+    Windows: %APPDATA%/couchpad/<name>.json
 
   Format:
   {

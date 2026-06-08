@@ -23,8 +23,8 @@ A few terms in the codebase come from third-party libraries and platform APIs:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Clone and build
-git clone https://github.com/YOUR_USERNAME/gamepad-mapper.git
-cd gamepad-mapper
+git clone https://github.com/YOUR_USERNAME/couchpad.git
+cd couchpad
 cargo build
 ```
 

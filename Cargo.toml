@@ -1,5 +1,5 @@
 [package]
-name = "gamepad-mapper"
+name = "couchpad"
 version = "0.1.0"
 edition = "2024"
 description = "A minimal CLI tool that maps gamepad/controller inputs to keyboard events"

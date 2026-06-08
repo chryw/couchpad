@@ -3,8 +3,8 @@
 ## Profile location
 
 When you customize or create profiles, they're stored as JSON files in:
-- **macOS:** `~/Library/Application Support/gamepad-mapper/<name>.json`
-- **Windows:** `%APPDATA%/gamepad-mapper/<name>.json`
+- **macOS:** `~/Library/Application Support/couchpad/<name>.json`
+- **Windows:** `%APPDATA%/couchpad/<name>.json`
 
 Local profiles take priority over built-in ones with the same name.
 
@@ -12,11 +12,11 @@ Local profiles take priority over built-in ones with the same name.
 
 ```bash
 # Use a built-in profile immediately (no setup needed)
-gamepad-mapper --profile vscode
+couchpad --profile vscode
 
 # Or create your own from scratch
-gamepad-mapper --init
-gamepad-mapper --setup
+couchpad --init
+couchpad --setup
 ```
 
 ## Built-in profiles
@@ -29,15 +29,15 @@ These profiles are embedded in the binary and work out of the box:
 | `vscode` | VS Code vibe coding with Copilot Chat ([guide](vscode-guide.md)) |
 
 ```bash
-gamepad-mapper --profile vscode
-gamepad-mapper --profile default
+couchpad --profile vscode
+couchpad --profile default
 ```
 
 To customize a built-in profile, run `--init` to save a copy to disk, then `--edit`:
 
 ```bash
-gamepad-mapper --profile vscode --init
-gamepad-mapper --profile vscode --edit
+couchpad --profile vscode --init
+couchpad --profile vscode --edit
 ```
 
 Your local copy takes priority over the built-in version.
@@ -166,7 +166,7 @@ alt+up            → Option+Up (Move Line Up)
 
 The app auto-detects Xbox vs Nintendo Switch controllers based on the device name. The layout only affects display labels — profiles always use Xbox convention.
 
-To override: `gamepad-mapper --layout switch`
+To override: `couchpad --layout switch`
 
 Detected as Switch: controllers with "Nintendo", "Switch", "Pro Controller", or "Joy-Con" in the name.
 
@@ -174,14 +174,14 @@ Detected as Switch: controllers with "Nintendo", "Switch", "Pro Controller", or 
 
 ```bash
 # Create a new empty profile
-gamepad-mapper --profile myprofile --init
+couchpad --profile myprofile --init
 
 # Edit it
-gamepad-mapper --profile myprofile --edit
+couchpad --profile myprofile --edit
 
 # Or use the interactive wizard
-gamepad-mapper --profile myprofile --setup
+couchpad --profile myprofile --setup
 
 # Validate before running
-gamepad-mapper --profile myprofile --validate
+couchpad --profile myprofile --validate
 ```

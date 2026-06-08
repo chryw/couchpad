@@ -1,5 +1,5 @@
 USAGE:
-  gamepad-mapper [OPTIONS]
+  couchpad [OPTIONS]
 
 OPTIONS:
   (no flags)             Start mapping with the default profile
@@ -17,9 +17,9 @@ OPTIONS:
   --validate             Check your profile for invalid button names or key combos
 
 EXAMPLES:
-  gamepad-mapper                        Start with default profile
-  gamepad-mapper --profile vscode       Start with the "vscode" profile
-  gamepad-mapper --setup                Guided wizard to create/edit mappings
-  gamepad-mapper --init                 Create a blank profile to edit manually
-  gamepad-mapper --test                 See what names your controller reports
-  gamepad-mapper --validate             Catch typos in your profile
+  couchpad                        Start with default profile
+  couchpad --profile vscode       Start with the "vscode" profile
+  couchpad --setup                Guided wizard to create/edit mappings
+  couchpad --init                 Create a blank profile to edit manually
+  couchpad --test                 See what names your controller reports
+  couchpad --validate             Catch typos in your profile

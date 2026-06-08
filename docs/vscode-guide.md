@@ -13,21 +13,21 @@ The controller handles navigation, confirmation, and app commands. Voice handles
 
 ## Prerequisites
 
-- [Gamepad Mapper](../README.md) installed and working
+- [Couchpad](../README.md) installed and working
 - [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) extension
 - [VS Code Speech](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-speech) extension (for voice input)
 
 ## Setup
 
 ```bash
-gamepad-mapper --profile vscode
+couchpad --profile vscode
 ```
 
 That's it — the `vscode` profile is built in. To customize it, save a local copy first:
 
 ```bash
-gamepad-mapper --profile vscode --init
-gamepad-mapper --profile vscode --edit
+couchpad --profile vscode --init
+couchpad --profile vscode --edit
 ```
 
 ## Workflow
