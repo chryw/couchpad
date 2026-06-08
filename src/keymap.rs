@@ -49,8 +49,14 @@ pub fn build_keycode_map() -> HashMap<&'static str, u16> {
     m.insert("tab", 0x30);
     m.insert("space", 0x31);
     m.insert("backspace", 0x33);
+    m.insert("delete", 0x75);
+    m.insert("del", 0x75);
     m.insert("escape", 0x35);
     m.insert("esc", 0x35);
+    m.insert("home", 0x73);
+    m.insert("end", 0x77);
+    m.insert("pageup", 0x74);
+    m.insert("pagedown", 0x79);
 
     // Modifiers (as keycodes, for standalone press)
     m.insert("shift", 0x38);
