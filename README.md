@@ -6,48 +6,11 @@ Works with any controller that supports standard gamepad input — Xbox, PlaySta
 
 Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input.
 
-## Install
-
-### Download (recommended)
-
-Grab the latest binary from [Releases](../../releases):
-
-- **macOS (Apple Silicon):** `gamepad-mapper-macos-arm64`
-- **macOS (Intel):** `gamepad-mapper-macos-x86_64`
-- **Windows:** `gamepad-mapper-windows-x86_64.exe`
-
-After downloading:
-
-```bash
-# macOS
-chmod +x gamepad-mapper-macos-arm64
-sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
-```
-
-On Windows, move the `.exe` to a folder in your `PATH`, or run it directly.
-
-Then jump to [Quick start](#quick-start).
-
-### Build from source
-
-Requires [Rust](https://rustup.rs/).
-
-```bash
-git clone https://github.com/YOUR_USERNAME/gamepad-mapper.git
-cd gamepad-mapper
-cargo build --release
-```
-
-Optionally install to your PATH:
-
-```bash
-cargo install --path .
-```
-
 ## Quick start
 
-1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
-2. Run:
+1. **Pair** your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
+2. **Install** — grab a binary from [Releases](../../releases) or [build from source](#build-from-source)
+3. **Run:**
 
 ```bash
 # Use a built-in profile (works immediately, no setup needed)
@@ -60,19 +23,44 @@ gamepad-mapper --setup
 gamepad-mapper --help
 ```
 
+> **macOS:** On first run, grant Accessibility permission to your terminal app:
+> System Settings → Privacy & Security → Accessibility
+
+## Install
+
+### Download (recommended)
+
+From [Releases](../../releases):
+
+- **macOS (Apple Silicon):** `gamepad-mapper-macos-arm64`
+- **macOS (Intel):** `gamepad-mapper-macos-x86_64`
+- **Windows:** `gamepad-mapper-windows-x86_64.exe`
+
+```bash
+# macOS
+chmod +x gamepad-mapper-macos-arm64
+sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
+```
+
+On Windows, move the `.exe` to a folder in your `PATH`, or run it directly.
+
+### Build from source
+
+Requires [Rust](https://rustup.rs/).
+
+```bash
+git clone https://github.com/YOUR_USERNAME/gamepad-mapper.git
+cd gamepad-mapper
+cargo build --release
+cargo install --path .
+```
+
 ## Documentation
 
 | Doc | What's in it |
 |-----|--------------|
 | [Profile reference](docs/profile-reference.md) | Profile format, built-in profiles, button/key names, layers |
 | [VS Code guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
-
-## Permissions
-
-**macOS:** Grant Accessibility permission to your terminal app:
-System Settings → Privacy & Security → Accessibility
-
-**Windows:** No extra permissions needed. Run from any terminal.
 
 ## License
 
