@@ -6,26 +6,6 @@ Works with any controller that supports standard gamepad input — Xbox, PlaySta
 
 Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input.
 
-## Quick start
-
-1. **Pair** your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
-2. **Install** — grab a binary from [Releases](../../releases) or [build from source](#build-from-source)
-3. **Run:**
-
-```bash
-# Use a built-in profile (works immediately, no setup needed)
-gamepad-mapper --profile vscode
-
-# Or create your own with the interactive wizard
-gamepad-mapper --setup
-
-# See all options
-gamepad-mapper --help
-```
-
-> **macOS:** On first run, grant Accessibility permission to your terminal app:
-> System Settings → Privacy & Security → Accessibility
-
 ## Install
 
 ### Download (recommended)
@@ -54,6 +34,25 @@ cd gamepad-mapper
 cargo build --release
 cargo install --path .
 ```
+
+## Quick start
+
+1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
+2. Run:
+
+```bash
+# Use a built-in profile (works immediately, no setup needed)
+gamepad-mapper --profile vscode
+
+# Or create your own with the interactive wizard
+gamepad-mapper --setup
+
+# See all options
+gamepad-mapper --help
+```
+
+> **macOS:** On first run, grant Accessibility permission to your terminal app:
+> System Settings → Privacy & Security → Accessibility
 
 ## Documentation
 
