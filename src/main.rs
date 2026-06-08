@@ -538,17 +538,17 @@ fn print_info(profile: Option<&str>, config_path: Option<PathBuf>, layout_overri
 fn print_help() {
     println!("🎮 Gamepad Mapper");
     println!("   Map game controller buttons to keyboard shortcuts.\n");
-    print!("{}", include_str!("../docs/help/usage.txt"));
+    print!("{}", include_str!("../docs/help/usage.md"));
     println!();
-    print!("{}", include_str!("../docs/help/config.txt"));
+    print!("{}", include_str!("../docs/help/config.md"));
     println!();
-    print!("{}", include_str!("../docs/help/buttons.txt"));
+    print!("{}", include_str!("../docs/help/buttons.md"));
     println!();
-    print!("{}", include_str!("../docs/help/keys.txt"));
+    print!("{}", include_str!("../docs/help/keys.md"));
     println!();
-    print!("{}", include_str!("../docs/help/getting-started.txt"));
+    print!("{}", include_str!("../docs/help/getting-started.md"));
     println!();
-    print!("{}", include_str!("../docs/help/tips.txt"));
+    print!("{}", include_str!("../docs/help/tips.md"));
 }
 
 fn open_config(profile: Option<&str>) {
