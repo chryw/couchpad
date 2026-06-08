@@ -1,5 +1,6 @@
 mod profile;
 mod keymap;
+mod install;
 
 #[cfg(target_os = "macos")]
 mod emitter_macos;
@@ -90,7 +91,7 @@ fn main() {
 
     // Handle --install flag: self-install to a PATH directory
     if args.iter().any(|a| a == "--install") {
-        self_install();
+        install::run();
         return;
     }
 
@@ -344,8 +345,15 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
     println!();
 
     // Main event loop
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use std::sync::Arc;
+
+    let running = Arc::new(AtomicBool::new(true));
+    let r = running.clone();
+    ctrlc::set_handler(move || { r.store(false, Ordering::SeqCst); }).ok();
+
     let mut layer_active = false;
-    loop {
+    while running.load(Ordering::SeqCst) {
         while let Some(event) = gilrs.next_event() {
             match event.event {
                 EventType::ButtonPressed(button, _) => {
@@ -376,6 +384,8 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
         }
         std::thread::sleep(std::time::Duration::from_millis(5));
     }
+
+    println!("\n  Stopped.");
 }
 
 #[cfg(target_os = "macos")]
@@ -568,9 +578,8 @@ fn run_test_mode(profile: Option<&str>, file_path: Option<PathBuf>, layout_overr
             match event.event {
                 EventType::ButtonPressed(button, _) => {
                     let display = button_display_name(button, layout);
-                    let internal_name = format!("{:?}", button);
-                    let mapped = mappings.get(&internal_name)
-                        .or_else(|| mappings.get(display))
+                    let canonical = button_canonical_name(button);
+                    let mapped = mappings.get(canonical)
                         .map(|k| format!(" → [{}]", k))
                         .unwrap_or_else(|| " (unmapped)".to_string());
                     println!("  ▶ {}{}", display, mapped);
@@ -695,109 +704,6 @@ fn print_help() {
     println!();
     println!("MORE INFO:");
     println!("  https://github.com/chryw/couchpad#readme");
-}
-
-fn self_install() {
-    use std::fs;
-    use std::io::Write;
-
-    let current_exe = match env::current_exe() {
-        Ok(p) => p,
-        Err(e) => {
-            eprintln!("Error: Could not determine current executable path: {}", e);
-            std::process::exit(1);
-        }
-    };
-
-    let install_dir = install_target_dir();
-    let install_path = install_dir.join(install_binary_name());
-
-    // Check if already installed at target
-    if current_exe == install_path {
-        println!("✓ Already installed at: {}", install_path.display());
-        return;
-    }
-
-    println!("🎮 Couchpad — Install\n");
-    println!("  Current location: {}", current_exe.display());
-    println!("  Install to:       {}", install_path.display());
-    println!();
-    print!("  Proceed? [Y/n] ");
-    std::io::stdout().flush().ok();
-
-    let mut input = String::new();
-    if std::io::stdin().read_line(&mut input).is_ok() {
-        let input = input.trim().to_lowercase();
-        if !input.is_empty() && input != "y" && input != "yes" {
-            println!("  Cancelled.");
-            return;
-        }
-    }
-
-    // Create install directory if needed
-    if !install_dir.exists() {
-        if let Err(e) = fs::create_dir_all(&install_dir) {
-            eprintln!("  Error: Could not create {}: {}", install_dir.display(), e);
-            eprintln!("  Try: sudo {} --install", current_exe.display());
-            std::process::exit(1);
-        }
-    }
-
-    // Copy binary
-    if let Err(e) = fs::copy(&current_exe, &install_path) {
-        eprintln!("  Error: Could not copy to {}: {}", install_path.display(), e);
-        eprintln!("  Try: sudo {} --install", current_exe.display());
-        std::process::exit(1);
-    }
-
-    // Set executable permission on Unix
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        let _ = fs::set_permissions(&install_path, fs::Permissions::from_mode(0o755));
-    }
-
-    println!("  ✓ Installed to: {}", install_path.display());
-
-    // Check if install dir is in PATH
-    let path_var = env::var("PATH").unwrap_or_default();
-    let in_path = path_var.split(if cfg!(windows) { ';' } else { ':' })
-        .any(|p| PathBuf::from(p) == install_dir);
-
-    if !in_path {
-        println!();
-        println!("  ⚠ {} is not in your PATH.", install_dir.display());
-        if cfg!(target_os = "macos") {
-            println!("  Add this to your shell profile (~/.zshrc or ~/.bashrc):");
-            println!("    export PATH=\"{}:$PATH\"", install_dir.display());
-        } else {
-            println!("  Add {} to your system PATH.", install_dir.display());
-        }
-    }
-
-    println!("\n  Run 'couchpad' to get started.");
-}
-
-#[cfg(target_os = "macos")]
-fn install_target_dir() -> PathBuf {
-    let home = env::var("HOME").unwrap_or_else(|_| ".".to_string());
-    PathBuf::from(home).join(".local").join("bin")
-}
-
-#[cfg(target_os = "windows")]
-fn install_target_dir() -> PathBuf {
-    let home = env::var("USERPROFILE").unwrap_or_else(|_| ".".to_string());
-    PathBuf::from(home).join(".local").join("bin")
-}
-
-#[cfg(not(any(target_os = "macos", target_os = "windows")))]
-fn install_target_dir() -> PathBuf {
-    let home = env::var("HOME").unwrap_or_else(|_| ".".to_string());
-    PathBuf::from(home).join(".local").join("bin")
-}
-
-fn install_binary_name() -> &'static str {
-    if cfg!(windows) { "couchpad.exe" } else { "couchpad" }
 }
 
 fn open_profile(profile: Option<&str>) {
