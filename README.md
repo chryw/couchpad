@@ -14,18 +14,20 @@ Works with any standard gamepad — Xbox, PlayStation, Switch, or cheap Bluetoot
 
    **macOS (Apple Silicon):**
    ```bash
-   curl -fsSL https://github.com/YOUR_USERNAME/couchpad/releases/latest/download/couchpad-macos-arm64 -o /usr/local/bin/couchpad && chmod +x /usr/local/bin/couchpad
+   mkdir -p ~/.local/bin && curl -fsSL https://github.com/chryw/couchpad/releases/latest/download/couchpad-macos-arm64 -o ~/.local/bin/couchpad && chmod +x ~/.local/bin/couchpad
    ```
 
    **macOS (Intel):**
    ```bash
-   curl -fsSL https://github.com/YOUR_USERNAME/couchpad/releases/latest/download/couchpad-macos-x86_64 -o /usr/local/bin/couchpad && chmod +x /usr/local/bin/couchpad
+   mkdir -p ~/.local/bin && curl -fsSL https://github.com/chryw/couchpad/releases/latest/download/couchpad-macos-x86_64 -o ~/.local/bin/couchpad && chmod +x ~/.local/bin/couchpad
    ```
 
    **Windows (PowerShell):**
    ```powershell
-   Invoke-WebRequest -Uri "https://github.com/YOUR_USERNAME/couchpad/releases/latest/download/couchpad-windows-x86_64.exe" -OutFile "$env:LOCALAPPDATA\couchpad.exe"
+   Invoke-WebRequest -Uri "https://github.com/chryw/couchpad/releases/latest/download/couchpad-windows-x86_64.exe" -OutFile "$env:LOCALAPPDATA\couchpad.exe"
    ```
+
+   > **macOS note:** If `~/.local/bin` isn't in your PATH, add `export PATH="$HOME/.local/bin:$PATH"` to your `~/.zshrc`.
 
 3. Run:
 
@@ -56,7 +58,7 @@ Couchpad is the tool you'd build yourself if you had a weekend. The entire codeb
 Requires [Rust](https://rustup.rs/).
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/couchpad.git
+git clone https://github.com/chryw/couchpad.git
 cd couchpad
 cargo build --release
 cargo install --path .

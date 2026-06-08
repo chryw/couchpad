@@ -283,14 +283,14 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
     let has_layer = !layer_actions.is_empty();
 
     // Print welcome banner
-    println!("┌─────────────────────────────────────────────────────┐");
-    println!("│  🎮 Couchpad                                  │");
-    println!("├─────────────────────────────────────────────────────┤");
-    println!("│  Profile: {:<41}│", profile.unwrap_or("default"));
-    println!("│  Layout:  {:<41}│", layout.name());
-    println!("│  Status:  ✓ Running                                 │");
-    println!("│  Stop:    Ctrl+C                                    │");
-    println!("└─────────────────────────────────────────────────────┘");
+    println!("┌───────────────────────────────────────────────────┐");
+    println!("│  🎮 Couchpad                                     │");
+    println!("├───────────────────────────────────────────────────┤");
+    println!("│  Profile: {:<39}│", profile.unwrap_or("default"));
+    println!("│  Layout:  {:<39}│", layout.name());
+    println!("│  Status:  ✓ Running                               │");
+    println!("│  Stop:    Ctrl+C                                  │");
+    println!("└───────────────────────────────────────────────────┘");
     println!();
 
     // Print connected gamepads
@@ -597,19 +597,19 @@ fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
     let cfg = profile::Profile::load(profile, file_path).ok();
     let profile_name = profile.unwrap_or("default");
 
-    println!("┌─────────────────────────────────────────────────────┐");
-    println!("│  🎮 Couchpad                                  │");
-    println!("├─────────────────────────────────────────────────────┤");
-    println!("│  Profile: {:<41}│", profile_name);
+    println!("┌───────────────────────────────────────────────────┐");
+    println!("│  🎮 Couchpad                                     │");
+    println!("├───────────────────────────────────────────────────┤");
+    println!("│  Profile: {:<39}│", profile_name);
     let user_path = profile::profile_path(profile_name);
     if user_path.exists() {
-        println!("│  Path:    {:<41}│", user_path.display());
+        println!("│  Path:    {:<39}│", user_path.display());
     } else {
-        println!("│  Source:  {:<41}│", "built-in");
+        println!("│  Source:  {:<39}│", "built-in");
     }
-    println!("│  Layout:  {:<41}│", layout.name());
-    println!("│  Status:  idle (not running)                        │");
-    println!("└─────────────────────────────────────────────────────┘");
+    println!("│  Layout:  {:<39}│", layout.name());
+    println!("│  Status:  idle (not running)                     │");
+    println!("└───────────────────────────────────────────────────┘");
     println!();
 
     let mut found_gamepad = false;
@@ -694,7 +694,7 @@ fn print_help() {
     print!("{}", include_str!("../docs/help/keys.md"));
     println!();
     println!("MORE INFO:");
-    println!("  https://github.com/YOUR_USERNAME/couchpad#readme");
+    println!("  https://github.com/chryw/couchpad#readme");
 }
 
 fn self_install() {
@@ -780,7 +780,8 @@ fn self_install() {
 
 #[cfg(target_os = "macos")]
 fn install_target_dir() -> PathBuf {
-    PathBuf::from("/usr/local/bin")
+    let home = env::var("HOME").unwrap_or_else(|_| ".".to_string());
+    PathBuf::from(home).join(".local").join("bin")
 }
 
 #[cfg(target_os = "windows")]
@@ -810,8 +811,10 @@ fn open_profile(profile: Option<&str>) {
 
     println!("  Opening: {}", path.display());
 
-    let result = if cfg!(target_os = "macos") {
-        Command::new("open").arg(&path).status()
+    let result = if let Ok(editor) = env::var("EDITOR") {
+        Command::new(&editor).arg(&path).status()
+    } else if cfg!(target_os = "macos") {
+        Command::new("open").arg("-t").arg(&path).status()
     } else if cfg!(target_os = "windows") {
         Command::new("cmd").args(["/C", "start", ""]).arg(&path).status()
     } else {
@@ -868,11 +871,11 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
 
     let profile_name = profile.unwrap_or("default");
 
-    println!("┌─────────────────────────────────────────────────────┐");
-    println!("│  🎮 Couchpad — Interactive Setup               │");
-    println!("├─────────────────────────────────────────────────────┤");
-    println!("│  Profile: {:<41}│", profile_name);
-    println!("└─────────────────────────────────────────────────────┘");
+    println!("┌───────────────────────────────────────────────────┐");
+    println!("│  🎮 Couchpad — Interactive Setup                  │");
+    println!("├───────────────────────────────────────────────────┤");
+    println!("│  Profile: {:<39}│", profile_name);
+    println!("└───────────────────────────────────────────────────┘");
     println!();
 
     // Check controller

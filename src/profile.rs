@@ -53,52 +53,20 @@ impl Profile {
     }
 
     pub fn create_default(name: Option<&str>) -> Result<PathBuf, String> {
-        let file_path = profile_path(name.unwrap_or("default"));
+        let profile_name = name.unwrap_or("default");
+        let file_path = profile_path(profile_name);
 
         if let Some(parent) = file_path.parent() {
             fs::create_dir_all(parent)
                 .map_err(|e| format!("Failed to create profiles directory: {}", e))?;
         }
 
-        let default = r#"{
-  "layer_button": "Home",
-  "mappings": {
-    "A": "return",
-    "B": "escape",
-    "X": "space",
-    "Y": "backspace",
-    "DPadUp": "up",
-    "DPadDown": "down",
-    "DPadLeft": "left",
-    "DPadRight": "right",
-    "RB": "super+shift+]",
-    "LB": "super+shift+[",
-    "RT": "pagedown",
-    "LT": "pageup",
-    "Start": "return",
-    "Select": "tab",
-    "LS": "home",
-    "RS": "end"
-  },
-  "layer_mappings": {
-    "A": "super+v",
-    "B": "super+c",
-    "X": "ctrl+c",
-    "Y": "super+a",
-    "DPadUp": "super+shift+]",
-    "DPadDown": "super+shift+[",
-    "DPadLeft": "super+[",
-    "DPadRight": "super+]",
-    "LB": "super+z",
-    "RB": "super+shift+z",
-    "LT": "super+minus",
-    "RT": "super+equal",
-    "LS": "super+f",
-    "RS": "super+w"
-  }
-}"#;
+        // Use the embedded built-in profile if available, otherwise a minimal default
+        let content = builtin_profile(profile_name).unwrap_or(
+            "{\n  \"layer_button\": \"Home\",\n  \"mappings\": {},\n  \"layer_mappings\": {}\n}"
+        );
 
-        fs::write(&file_path, default)
+        fs::write(&file_path, content)
             .map_err(|e| format!("Failed to write profile: {}", e))?;
 
         Ok(file_path)
