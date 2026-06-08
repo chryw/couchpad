@@ -6,28 +6,37 @@ Works with any controller that supports standard gamepad input — Xbox, PlaySta
 
 Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input.
 
-## Install
+## Get started
 
-### Download (recommended)
+1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
 
-From [Releases](../../releases):
+2. Download the binary for your platform from [Releases](../../releases) and open a terminal:
 
-- **macOS (Apple Silicon):** `gamepad-mapper-macos-arm64`
-- **macOS (Intel):** `gamepad-mapper-macos-x86_64`
-- **Windows:** `gamepad-mapper-windows-x86_64.exe`
+   **macOS:**
+   ```bash
+   chmod +x gamepad-mapper-macos-arm64
+   sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
+   ```
 
-This is a standalone binary, not a GUI installer. Open a terminal to set it up:
+   **Windows (PowerShell):**
+   ```powershell
+   move gamepad-mapper-windows-x86_64.exe C:\Users\YOU\bin\gamepad-mapper.exe
+   ```
 
-```bash
-# macOS — make it executable and move to PATH
-chmod +x gamepad-mapper-macos-arm64
-sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
-```
+3. Run it:
 
-```powershell
-# Windows — move to a folder in your PATH, or run from the download folder
-move gamepad-mapper-windows-x86_64.exe C:\Users\YOU\bin\gamepad-mapper.exe
-```
+   ```bash
+   # Interactive wizard — maps buttons to your choice of shortcuts
+   gamepad-mapper --setup
+
+   # Or start immediately with a pre-made VS Code profile
+   gamepad-mapper --profile vscode
+   ```
+
+Keep the terminal open — the tool runs in the foreground and maps buttons until you press Ctrl+C.
+
+> **macOS:** On first run, grant Accessibility permission to your terminal app:
+> System Settings → Privacy & Security → Accessibility
 
 ### Build from source
 
@@ -39,27 +48,6 @@ cd gamepad-mapper
 cargo build --release
 cargo install --path .
 ```
-
-## Quick start
-
-1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
-2. Open a terminal and run:
-
-```bash
-# Interactive wizard — maps buttons to your choice of shortcuts
-gamepad-mapper --setup
-
-# Or start immediately with a pre-made VS Code profile
-gamepad-mapper --profile vscode
-
-# See all options
-gamepad-mapper --help
-```
-
-Keep the terminal open — the tool runs in the foreground and maps buttons until you press Ctrl+C.
-
-> **macOS:** On first run, grant Accessibility permission to your terminal app:
-> System Settings → Privacy & Security → Accessibility
 
 ## Learn more
 
