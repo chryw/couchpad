@@ -54,12 +54,10 @@ gamepad-mapper --help
 > **macOS:** On first run, grant Accessibility permission to your terminal app:
 > System Settings → Privacy & Security → Accessibility
 
-## Documentation
+## Learn more
 
-| Doc | What's in it |
-|-----|--------------|
-| [Profile reference](docs/profile-reference.md) | Profile format, built-in profiles, button/key names, layers |
-| [VS Code guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
+- [Profile reference](docs/profile-reference.md) — format, built-in profiles, button/key names, layers
+- [VS Code guide](docs/vscode-guide.md) — vibe coding with Copilot Chat + voice input
 
 ## Contributing
 
