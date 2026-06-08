@@ -96,8 +96,9 @@ fn main() {
                     println!("No profiles found. Run with --init to create one.");
                 } else {
                     println!("📋 Available profiles:\n");
-                    for (i, p) in profiles.iter().enumerate() {
-                        println!("   [{}] {}", i + 1, p);
+                    for (i, (name, is_builtin)) in profiles.iter().enumerate() {
+                        let tag = if *is_builtin { " (built-in)" } else { "" };
+                        println!("   [{}] {}{}", i + 1, name, tag);
                     }
                     println!("\n  Select a profile to run (1-{}), or press Enter to cancel:", profiles.len());
 
@@ -110,14 +111,14 @@ fn main() {
                         // Try parsing as number
                         if let Ok(num) = input.parse::<usize>() {
                             if num >= 1 && num <= profiles.len() {
-                                let selected = &profiles[num - 1];
+                                let selected = &profiles[num - 1].0;
                                 println!("\n  Starting profile: {}\n", selected);
                                 run_mapper(Some(selected.as_str()), None, layout_override);
                                 return;
                             }
                         }
                         // Try matching by name
-                        if let Some(matched) = profiles.iter().find(|p| p.as_str() == input) {
+                        if let Some((matched, _)) = profiles.iter().find(|(p, _)| p.as_str() == input) {
                             println!("\n  Starting profile: {}\n", matched);
                             run_mapper(Some(matched.as_str()), None, layout_override);
                             return;

@@ -36,28 +36,13 @@ cargo build --release
 ## Quick start
 
 ```bash
-# 1. Create a default profile
-gamepad-mapper --init
-
-# 2. Interactive setup (pick actions, press buttons)
-gamepad-mapper --setup
-
-# 3. Run
-gamepad-mapper
-```
-
-Or use a built-in profile:
-
-```bash
-# macOS
-cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json
-
-# Windows
-copy profiles\vscode.json %APPDATA%\gamepad-mapper\vscode.json
-```
-
-```bash
+# 1. Run with a built-in profile (works immediately, no setup needed)
 gamepad-mapper --profile vscode
+
+# Or create your own profile from scratch
+gamepad-mapper --init
+gamepad-mapper --setup
+gamepad-mapper
 ```
 
 ## Usage

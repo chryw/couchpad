@@ -20,11 +20,14 @@ The controller handles navigation, confirmation, and app commands. Voice handles
 ## Setup
 
 ```bash
-# Install the vscode profile
-cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json
-
-# Start the mapper
 gamepad-mapper --profile vscode
+```
+
+That's it — the `vscode` profile is built in. To customize it, save a local copy first:
+
+```bash
+gamepad-mapper --profile vscode --init
+gamepad-mapper --profile vscode --edit
 ```
 
 ## Workflow
