@@ -11,10 +11,10 @@
     "DPadRight": "right",
     "LB": "shift+tab",
     "RB": "tab",
-    "LT": "super+shift+p",
+    "LT": "ctrl+super+i",
     "RT": "super+p",
-    "LS": "f12",
-    "RS": "super+/",
+    "LS": "super+z",
+    "RS": "super+shift+z",
     "Select": "super+shift+e",
     "Start": "super+s"
   },
@@ -23,17 +23,17 @@
     "B": "super+w",
     "X": "ctrl+c",
     "Y": "ctrl+`",
-    "DPadUp": "alt+up",
-    "DPadDown": "alt+down",
-    "DPadLeft": "super+shift+[",
-    "DPadRight": "super+shift+]",
+    "DPadUp": "super+shift+]",
+    "DPadDown": "super+shift+[",
+    "DPadLeft": "super+[",
+    "DPadRight": "super+]",
     "LB": "super+z",
     "RB": "super+shift+z",
-    "LT": "ctrl+super+i",
+    "LT": "super+shift+p",
     "RT": "f5",
     "LS": "super+f",
-    "RS": "super+n",
+    "RS": "super+/",
     "Select": "super+shift+x",
-    "Start": "super+shift+p"
+    "Start": "super+n"
   }
 }
