@@ -1,14 +1,14 @@
 # 🎮 Couchpad
 
-A minimal command-line tool that maps game controller buttons to keyboard shortcuts. Runs in a terminal alongside your editor. Built in Rust, works on macOS and Windows.
+Map a game controller to keyboard shortcuts. That's it.
 
-Works with any controller that supports standard gamepad input — Xbox, PlayStation, Switch Pro, and most Bluetooth mini controllers. Button labels in the UI auto-adjust for Xbox and Switch layouts (use `--layout` to override).
+No GUI, no background service, no account, no ads. A single binary you can read and understand. Built for developers who want a simple, transparent tool — not a feature-rich app they'll never fully trust.
 
-Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input.
+Works with any standard gamepad — Xbox, PlayStation, Switch, or cheap Bluetooth mini controllers. Useful for AI-assisted coding from the couch (Copilot Chat, Claude Code, Cursor) or any workflow where you want a few buttons to trigger shortcuts.
 
 ## Get started
 
-1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
+1. Pair your controller via Bluetooth
 
 2. Install — paste in your terminal:
 
@@ -33,14 +33,25 @@ Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input
    couchpad
    ```
 
-   On first run, you'll be prompted to choose: interactive wizard, a pre-made VS Code profile, or basic defaults.
+   First run walks you through setup — pick a built-in profile or map your own buttons interactively.
 
-Keep the terminal open — the tool runs in the foreground and maps buttons until you press Ctrl+C.
+Keep the terminal open while you use it. Press Ctrl+C to stop.
 
-> **macOS:** On first run, grant Accessibility permission to your terminal app:
+> **macOS:** Grant Accessibility permission on first run:
 > System Settings → Privacy & Security → Accessibility
 
-### Build from source
+## Why this exists
+
+Most gamepad mappers are built for gaming — complex GUIs, dozens of options, background services, or restrictive licenses. If you just want to press a button and send a keyboard shortcut, they're overkill.
+
+Couchpad is the tool you'd build yourself if you had a weekend. The entire codebase fits in your head.
+
+## Learn more
+
+- [Profile reference](docs/profile-reference.md) — format, button/key names, layers
+- [VS Code guide](docs/vscode-guide.md) — couch coding with Copilot Chat + voice input
+
+## Build from source
 
 Requires [Rust](https://rustup.rs/).
 
@@ -50,11 +61,6 @@ cd couchpad
 cargo build --release
 cargo install --path .
 ```
-
-## Learn more
-
-- [Profile reference](docs/profile-reference.md) — format, built-in profiles, button/key names, layers
-- [VS Code guide](docs/vscode-guide.md) — vibe coding with Copilot Chat + voice input
 
 ## Contributing
 
