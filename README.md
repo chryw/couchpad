@@ -16,13 +16,18 @@ From [Releases](../../releases):
 - **macOS (Intel):** `gamepad-mapper-macos-x86_64`
 - **Windows:** `gamepad-mapper-windows-x86_64.exe`
 
+This is a standalone binary, not a GUI installer. Open a terminal to set it up:
+
 ```bash
-# macOS
+# macOS — make it executable and move to PATH
 chmod +x gamepad-mapper-macos-arm64
 sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
 ```
 
-On Windows, move the `.exe` to a folder in your `PATH`, or run it directly.
+```powershell
+# Windows — move to a folder in your PATH, or run from the download folder
+move gamepad-mapper-windows-x86_64.exe C:\Users\YOU\bin\gamepad-mapper.exe
+```
 
 ### Build from source
 
