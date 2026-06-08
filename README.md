@@ -12,16 +12,18 @@ Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input
 
 2. Download the binary for your platform from [Releases](../../releases) and open a terminal:
 
-   **macOS:**
    ```bash
+   # macOS / Linux
    chmod +x gamepad-mapper-macos-arm64
-   sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
+   ./gamepad-mapper-macos-arm64 --install
    ```
 
-   **Windows (PowerShell):**
    ```powershell
-   move gamepad-mapper-windows-x86_64.exe C:\Users\YOU\bin\gamepad-mapper.exe
+   # Windows (PowerShell)
+   .\gamepad-mapper-windows-x86_64.exe --install
    ```
+
+   This copies the binary to your PATH so you can run `gamepad-mapper` from anywhere.
 
 3. Run it:
 

@@ -7,6 +7,7 @@ OPTIONS:
   --help, -h             Show this help
   --info                 Show connected controller, active profile, and all mappings
   --init                 Create a new empty profile file to customize
+  --install              Install this binary to your PATH (run from Downloads)
   --layout <type>        Force controller labels to "xbox" or "switch" (default: auto-detected)
   --list                 Show all available profiles and pick one to run
   --load <path>          Load a profile from a specific file path instead of by name
