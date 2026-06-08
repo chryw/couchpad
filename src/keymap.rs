@@ -5,9 +5,13 @@ use std::collections::HashMap;
 /// On Windows: returns Windows Virtual-Key codes.
 pub fn build_keycode_map() -> HashMap<&'static str, u16> {
     #[cfg(target_os = "macos")]
-    { build_keycode_map_macos() }
+    {
+        build_keycode_map_macos()
+    }
     #[cfg(target_os = "windows")]
-    { build_keycode_map_windows() }
+    {
+        build_keycode_map_windows()
+    }
 }
 
 /// macOS CGEvent keycodes
@@ -135,13 +139,33 @@ fn build_keycode_map_windows() -> HashMap<&'static str, u16> {
     // Letters A-Z (VK_A=0x41 through VK_Z=0x5A)
     for c in b'a'..=b'z' {
         let key: &'static str = match c {
-            b'a' => "a", b'b' => "b", b'c' => "c", b'd' => "d",
-            b'e' => "e", b'f' => "f", b'g' => "g", b'h' => "h",
-            b'i' => "i", b'j' => "j", b'k' => "k", b'l' => "l",
-            b'm' => "m", b'n' => "n", b'o' => "o", b'p' => "p",
-            b'q' => "q", b'r' => "r", b's' => "s", b't' => "t",
-            b'u' => "u", b'v' => "v", b'w' => "w", b'x' => "x",
-            b'y' => "y", b'z' => "z", _ => unreachable!(),
+            b'a' => "a",
+            b'b' => "b",
+            b'c' => "c",
+            b'd' => "d",
+            b'e' => "e",
+            b'f' => "f",
+            b'g' => "g",
+            b'h' => "h",
+            b'i' => "i",
+            b'j' => "j",
+            b'k' => "k",
+            b'l' => "l",
+            b'm' => "m",
+            b'n' => "n",
+            b'o' => "o",
+            b'p' => "p",
+            b'q' => "q",
+            b'r' => "r",
+            b's' => "s",
+            b't' => "t",
+            b'u' => "u",
+            b'v' => "v",
+            b'w' => "w",
+            b'x' => "x",
+            b'y' => "y",
+            b'z' => "z",
+            _ => unreachable!(),
         };
         m.insert(key, (0x41 + (c - b'a')) as u16);
     }
@@ -149,32 +173,40 @@ fn build_keycode_map_windows() -> HashMap<&'static str, u16> {
     // Numbers 0-9 (VK_0=0x30 through VK_9=0x39)
     for i in 0..=9u16 {
         let key: &'static str = match i {
-            0 => "0", 1 => "1", 2 => "2", 3 => "3", 4 => "4",
-            5 => "5", 6 => "6", 7 => "7", 8 => "8", 9 => "9",
+            0 => "0",
+            1 => "1",
+            2 => "2",
+            3 => "3",
+            4 => "4",
+            5 => "5",
+            6 => "6",
+            7 => "7",
+            8 => "8",
+            9 => "9",
             _ => unreachable!(),
         };
         m.insert(key, 0x30 + i);
     }
 
     // Special keys
-    m.insert("return", 0x0D);  // VK_RETURN
+    m.insert("return", 0x0D); // VK_RETURN
     m.insert("enter", 0x0D);
-    m.insert("tab", 0x09);     // VK_TAB
-    m.insert("space", 0x20);   // VK_SPACE
+    m.insert("tab", 0x09); // VK_TAB
+    m.insert("space", 0x20); // VK_SPACE
     m.insert("backspace", 0x08); // VK_BACK
-    m.insert("delete", 0x2E);  // VK_DELETE
+    m.insert("delete", 0x2E); // VK_DELETE
     m.insert("del", 0x2E);
-    m.insert("escape", 0x1B);  // VK_ESCAPE
+    m.insert("escape", 0x1B); // VK_ESCAPE
     m.insert("esc", 0x1B);
-    m.insert("home", 0x24);    // VK_HOME
-    m.insert("end", 0x23);     // VK_END
-    m.insert("pageup", 0x21);  // VK_PRIOR
+    m.insert("home", 0x24); // VK_HOME
+    m.insert("end", 0x23); // VK_END
+    m.insert("pageup", 0x21); // VK_PRIOR
     m.insert("pagedown", 0x22); // VK_NEXT
 
     // Modifiers (as keycodes, for standalone press)
-    m.insert("shift", 0x10);   // VK_SHIFT
+    m.insert("shift", 0x10); // VK_SHIFT
     m.insert("capslock", 0x14); // VK_CAPITAL
-    m.insert("option", 0x12);  // VK_MENU (Alt)
+    m.insert("option", 0x12); // VK_MENU (Alt)
     m.insert("alt", 0x12);
     m.insert("control", 0x11); // VK_CONTROL
     m.insert("ctrl", 0x11);
@@ -182,10 +214,10 @@ fn build_keycode_map_windows() -> HashMap<&'static str, u16> {
     m.insert("cmd", 0x5B);
 
     // Arrow keys
-    m.insert("left", 0x25);    // VK_LEFT
-    m.insert("right", 0x27);   // VK_RIGHT
-    m.insert("down", 0x28);    // VK_DOWN
-    m.insert("up", 0x26);      // VK_UP
+    m.insert("left", 0x25); // VK_LEFT
+    m.insert("right", 0x27); // VK_RIGHT
+    m.insert("down", 0x28); // VK_DOWN
+    m.insert("up", 0x26); // VK_UP
 
     // Function keys (VK_F1=0x70 through VK_F12=0x7B)
     m.insert("f1", 0x70);
@@ -202,27 +234,27 @@ fn build_keycode_map_windows() -> HashMap<&'static str, u16> {
     m.insert("f12", 0x7B);
 
     // Punctuation (Windows VK codes for OEM keys)
-    m.insert("minus", 0xBD);       // VK_OEM_MINUS
+    m.insert("minus", 0xBD); // VK_OEM_MINUS
     m.insert("-", 0xBD);
-    m.insert("equal", 0xBB);       // VK_OEM_PLUS (= key)
+    m.insert("equal", 0xBB); // VK_OEM_PLUS (= key)
     m.insert("=", 0xBB);
     m.insert("leftbracket", 0xDB); // VK_OEM_4
     m.insert("[", 0xDB);
     m.insert("rightbracket", 0xDD); // VK_OEM_6
     m.insert("]", 0xDD);
-    m.insert("semicolon", 0xBA);   // VK_OEM_1
+    m.insert("semicolon", 0xBA); // VK_OEM_1
     m.insert(";", 0xBA);
-    m.insert("quote", 0xDE);       // VK_OEM_7
+    m.insert("quote", 0xDE); // VK_OEM_7
     m.insert("'", 0xDE);
-    m.insert("comma", 0xBC);       // VK_OEM_COMMA
+    m.insert("comma", 0xBC); // VK_OEM_COMMA
     m.insert(",", 0xBC);
-    m.insert("period", 0xBE);      // VK_OEM_PERIOD
+    m.insert("period", 0xBE); // VK_OEM_PERIOD
     m.insert(".", 0xBE);
-    m.insert("slash", 0xBF);       // VK_OEM_2
+    m.insert("slash", 0xBF); // VK_OEM_2
     m.insert("/", 0xBF);
-    m.insert("backslash", 0xDC);   // VK_OEM_5
+    m.insert("backslash", 0xDC); // VK_OEM_5
     m.insert("\\", 0xDC);
-    m.insert("grave", 0xC0);       // VK_OEM_3
+    m.insert("grave", 0xC0); // VK_OEM_3
     m.insert("`", 0xC0);
 
     m
@@ -233,7 +265,7 @@ fn build_keycode_map_windows() -> HashMap<&'static str, u16> {
 pub mod modifiers {
     pub const SHIFT: u64 = 0x00020000;
     pub const CONTROL: u64 = 0x00040000;
-    pub const OPTION: u64 = 0x00080000;  // Alt on Windows
+    pub const OPTION: u64 = 0x00080000; // Alt on Windows
     pub const COMMAND: u64 = 0x00100000; // Win key on Windows
 }
 
@@ -278,8 +310,10 @@ mod tests {
     #[test]
     fn keycode_map_has_all_letters() {
         let map = build_keycode_map();
-        let letters = ["a","b","c","d","e","f","g","h","i","j","k","l","m",
-                       "n","o","p","q","r","s","t","u","v","w","x","y","z"];
+        let letters = [
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q",
+            "r", "s", "t", "u", "v", "w", "x", "y", "z",
+        ];
         for key in letters {
             assert!(map.contains_key(key), "missing key: {}", key);
         }
@@ -306,9 +340,24 @@ mod tests {
     #[test]
     fn keycode_map_has_essential_keys() {
         let map = build_keycode_map();
-        let essentials = ["return", "enter", "tab", "space", "backspace", "delete",
-                         "escape", "esc", "home", "end", "pageup", "pagedown",
-                         "left", "right", "up", "down"];
+        let essentials = [
+            "return",
+            "enter",
+            "tab",
+            "space",
+            "backspace",
+            "delete",
+            "escape",
+            "esc",
+            "home",
+            "end",
+            "pageup",
+            "pagedown",
+            "left",
+            "right",
+            "up",
+            "down",
+        ];
         for key in essentials {
             assert!(map.contains_key(key), "missing essential key: {}", key);
         }

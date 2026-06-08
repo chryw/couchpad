@@ -38,17 +38,19 @@ pub fn run() {
     }
 
     // Create install directory if needed
-    if !install_dir.exists() {
-        if let Err(e) = fs::create_dir_all(&install_dir) {
-            eprintln!("  Error: Could not create {}: {}", install_dir.display(), e);
-            eprintln!("  Try: sudo {} --install", current_exe.display());
-            std::process::exit(1);
-        }
+    if let Err(e) = fs::create_dir_all(&install_dir) {
+        eprintln!("  Error: Could not create {}: {}", install_dir.display(), e);
+        eprintln!("  Try: sudo {} --install", current_exe.display());
+        std::process::exit(1);
     }
 
     // Copy binary
     if let Err(e) = fs::copy(&current_exe, &install_path) {
-        eprintln!("  Error: Could not copy to {}: {}", install_path.display(), e);
+        eprintln!(
+            "  Error: Could not copy to {}: {}",
+            install_path.display(),
+            e
+        );
         eprintln!("  Try: sudo {} --install", current_exe.display());
         std::process::exit(1);
     }
@@ -64,8 +66,9 @@ pub fn run() {
 
     // Check if install dir is in PATH
     let path_var = env::var("PATH").unwrap_or_default();
-    let in_path = path_var.split(if cfg!(windows) { ';' } else { ':' })
-        .any(|p| PathBuf::from(p) == install_dir);
+    let in_path = path_var
+        .split(if cfg!(windows) { ';' } else { ':' })
+        .any(|p| std::path::Path::new(p) == install_dir);
 
     if !in_path {
         println!();
@@ -103,5 +106,9 @@ fn target_dir() -> PathBuf {
 }
 
 fn binary_name() -> &'static str {
-    if cfg!(windows) { "couchpad.exe" } else { "couchpad" }
+    if cfg!(windows) {
+        "couchpad.exe"
+    } else {
+        "couchpad"
+    }
 }

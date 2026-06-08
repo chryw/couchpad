@@ -1,6 +1,6 @@
-mod profile;
-mod keymap;
 mod install;
+mod keymap;
+mod profile;
 
 #[cfg(target_os = "macos")]
 mod emitter_macos;
@@ -34,8 +34,10 @@ impl Layout {
     /// Auto-detect layout from controller name
     fn detect(controller_name: &str) -> Self {
         let name = controller_name.to_lowercase();
-        if name.contains("nintendo") || name.contains("switch")
-            || name.contains("pro controller") || name.contains("joy-con")
+        if name.contains("nintendo")
+            || name.contains("switch")
+            || name.contains("pro controller")
+            || name.contains("joy-con")
         {
             Layout::Switch
         } else {
@@ -56,7 +58,7 @@ fn detect_layout(gilrs: &Gilrs, layout_override: Option<Layout>) -> Layout {
     if let Some(l) = layout_override {
         return l;
     }
-    for (_id, gamepad) in gilrs.gamepads() {
+    if let Some((_id, gamepad)) = gilrs.gamepads().next() {
         return Layout::detect(gamepad.name());
     }
     Layout::Xbox
@@ -113,7 +115,10 @@ fn main() {
                         let tag = if *is_builtin { " (built-in)" } else { "" };
                         println!("   [{}] {}{}", i + 1, name, tag);
                     }
-                    println!("\n  Select a profile to run (1-{}), or press Enter to cancel:", profiles.len());
+                    println!(
+                        "\n  Select a profile to run (1-{}), or press Enter to cancel:",
+                        profiles.len()
+                    );
 
                     let mut input = String::new();
                     if std::io::stdin().read_line(&mut input).is_ok() {
@@ -122,16 +127,20 @@ fn main() {
                             return;
                         }
                         // Try parsing as number
-                        if let Ok(num) = input.parse::<usize>() {
-                            if num >= 1 && num <= profiles.len() {
-                                let selected = &profiles[num - 1].0;
-                                println!("\n  Starting profile: {}\n", selected);
-                                run_mapper(Some(selected.as_str()), None, layout_override);
-                                return;
-                            }
+                        if let Some((selected, _)) = input
+                            .parse::<usize>()
+                            .ok()
+                            .filter(|&n| n >= 1 && n <= profiles.len())
+                            .and_then(|n| profiles.get(n - 1))
+                        {
+                            println!("\n  Starting profile: {}\n", selected);
+                            run_mapper(Some(selected.as_str()), None, layout_override);
+                            return;
                         }
                         // Try matching by name
-                        if let Some((matched, _)) = profiles.iter().find(|(p, _)| p.as_str() == input) {
+                        if let Some((matched, _)) =
+                            profiles.iter().find(|(p, _)| p.as_str() == input)
+                        {
                             println!("\n  Starting profile: {}\n", matched);
                             run_mapper(Some(matched.as_str()), None, layout_override);
                             return;
@@ -236,7 +245,10 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
     };
 
     // Initialize gamepad listener
-    let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
+    let mut gilrs = Gilrs::new().unwrap_or_else(|e| {
+        eprintln!("Error: Failed to initialize gamepad library: {}", e);
+        std::process::exit(1);
+    });
 
     // Auto-detect layout from controller
     let layout = detect_layout(&gilrs, layout_override);
@@ -310,7 +322,10 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
         }
         let uuid = gamepad.uuid();
         if uuid != [0u8; 16] {
-            let uuid_str = uuid.iter().map(|b| format!("{:02x}", b)).collect::<String>();
+            let uuid_str = uuid
+                .iter()
+                .map(|b| format!("{:02x}", b))
+                .collect::<String>();
             println!("     UUID:      {}", uuid_str);
         }
         found_gamepad = true;
@@ -322,41 +337,72 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
 
     // Print keymap table
     println!("  ┌──────────────────┬──────────────────────┬──────────────────────┐");
-    println!("  │ Button           │ Normal               │ Layer ({:<5})        │", cfg.layer_button);
+    println!(
+        "  │ Button           │ Normal               │ Layer ({:<5})        │",
+        cfg.layer_button
+    );
     println!("  ├──────────────────┼──────────────────────┼──────────────────────┤");
 
     let face = face_button_labels(layout);
     let all_buttons = [
-        face[0], face[1], face[2], face[3],
-        "DPadUp", "DPadDown", "DPadLeft", "DPadRight",
-        "LB", "RB", "LT", "RT",
-        "LS", "RS", "Select", "Start",
+        face[0],
+        face[1],
+        face[2],
+        face[3],
+        "DPadUp",
+        "DPadDown",
+        "DPadLeft",
+        "DPadRight",
+        "LB",
+        "RB",
+        "LT",
+        "RT",
+        "LS",
+        "RS",
+        "Select",
+        "Start",
     ];
 
     for name in &all_buttons {
         let button = parse_button(name);
-        let normal = button.and_then(|b| {
-            cfg.mappings.iter().find(|(k, _)| parse_button(k) == Some(b)).map(|(_, v)| v.as_str())
-        }).unwrap_or("—");
-        let layer = button.and_then(|b| {
-            cfg.layer_mappings.iter().find(|(k, _)| parse_button(k) == Some(b)).map(|(_, v)| v.as_str())
-        }).unwrap_or("—");
+        let normal = button
+            .and_then(|b| {
+                cfg.mappings
+                    .iter()
+                    .find(|(k, _)| parse_button(k) == Some(b))
+                    .map(|(_, v)| v.as_str())
+            })
+            .unwrap_or("—");
+        let layer = button
+            .and_then(|b| {
+                cfg.layer_mappings
+                    .iter()
+                    .find(|(k, _)| parse_button(k) == Some(b))
+                    .map(|(_, v)| v.as_str())
+            })
+            .unwrap_or("—");
         println!("  │ {:<16} │ {:<20} │ {:<20} │", name, normal, layer);
     }
 
     println!("  └──────────────────┴──────────────────────┴──────────────────────┘");
     if has_layer {
-        println!("\n  Hold [{}] + button for layer actions.", cfg.layer_button);
+        println!(
+            "\n  Hold [{}] + button for layer actions.",
+            cfg.layer_button
+        );
     }
     println!();
 
     // Main event loop
-    use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::Arc;
+    use std::sync::atomic::{AtomicBool, Ordering};
 
     let running = Arc::new(AtomicBool::new(true));
     let r = running.clone();
-    ctrlc::set_handler(move || { r.store(false, Ordering::SeqCst); }).ok();
+    ctrlc::set_handler(move || {
+        r.store(false, Ordering::SeqCst);
+    })
+    .ok();
 
     let mut layer_active = false;
     while running.load(Ordering::SeqCst) {
@@ -376,14 +422,16 @@ fn run_mapper(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
 
                     if let Some(&(keycode, flags)) = action {
                         let layer_indicator = if layer_active { " [layer]" } else { "" };
-                        println!("  {} → sending key{}", button_display_name(button, layout), layer_indicator);
+                        println!(
+                            "  {} → sending key{}",
+                            button_display_name(button, layout),
+                            layer_indicator
+                        );
                         emit_key(keycode, flags);
                     }
                 }
-                EventType::ButtonReleased(button, _) => {
-                    if layer_button == Some(button) {
-                        layer_active = false;
-                    }
+                EventType::ButtonReleased(button, _) if layer_button == Some(button) => {
+                    layer_active = false;
                 }
                 _ => {}
             }
@@ -431,10 +479,22 @@ fn parse_button(name: &str) -> Option<Button> {
 /// Config always uses Xbox names; this translates for display purposes.
 fn button_display_name(button: Button, layout: Layout) -> &'static str {
     match button {
-        Button::South => match layout { Layout::Xbox => "A", Layout::Switch => "B" },
-        Button::East => match layout { Layout::Xbox => "B", Layout::Switch => "A" },
-        Button::North => match layout { Layout::Xbox => "Y", Layout::Switch => "X" },
-        Button::West => match layout { Layout::Xbox => "X", Layout::Switch => "Y" },
+        Button::South => match layout {
+            Layout::Xbox => "A",
+            Layout::Switch => "B",
+        },
+        Button::East => match layout {
+            Layout::Xbox => "B",
+            Layout::Switch => "A",
+        },
+        Button::North => match layout {
+            Layout::Xbox => "Y",
+            Layout::Switch => "X",
+        },
+        Button::West => match layout {
+            Layout::Xbox => "X",
+            Layout::Switch => "Y",
+        },
         Button::DPadUp => "DPadUp",
         Button::DPadDown => "DPadDown",
         Button::DPadLeft => "DPadLeft",
@@ -499,7 +559,10 @@ fn validate_profile(profile: Option<&str>, file_path: Option<PathBuf>) {
 
     // Validate layer button
     if parse_button(&prof.layer_button).is_none() {
-        errors.push(format!("layer_button: unknown button \"{}\"", prof.layer_button));
+        errors.push(format!(
+            "layer_button: unknown button \"{}\"",
+            prof.layer_button
+        ));
     }
 
     // Validate base mappings
@@ -508,7 +571,10 @@ fn validate_profile(profile: Option<&str>, file_path: Option<PathBuf>) {
             errors.push(format!("mappings: unknown button \"{}\"", button));
         }
         if keymap::parse_key_combo(combo, &keycode_map).is_none() {
-            errors.push(format!("mappings: invalid key combo \"{}\" for button \"{}\"", combo, button));
+            errors.push(format!(
+                "mappings: invalid key combo \"{}\" for button \"{}\"",
+                combo, button
+            ));
         }
     }
 
@@ -518,7 +584,10 @@ fn validate_profile(profile: Option<&str>, file_path: Option<PathBuf>) {
             errors.push(format!("layer_mappings: unknown button \"{}\"", button));
         }
         if keymap::parse_key_combo(combo, &keycode_map).is_none() {
-            errors.push(format!("layer_mappings: invalid key combo \"{}\" for button \"{}\"", combo, button));
+            errors.push(format!(
+                "layer_mappings: invalid key combo \"{}\" for button \"{}\"",
+                combo, button
+            ));
         }
     }
 
@@ -531,13 +600,19 @@ fn validate_profile(profile: Option<&str>, file_path: Option<PathBuf>) {
 
     // Check for layer button also mapped
     if prof.mappings.contains_key(&prof.layer_button) {
-        warnings.push(format!("layer_button \"{}\" is also mapped in base layer (it will only activate the layer)", prof.layer_button));
+        warnings.push(format!(
+            "layer_button \"{}\" is also mapped in base layer (it will only activate the layer)",
+            prof.layer_button
+        ));
     }
 
     // Report results
     if errors.is_empty() && warnings.is_empty() {
-        println!("✓ Profile is valid ({} base + {} layer mappings)",
-            prof.mappings.len(), prof.layer_mappings.len());
+        println!(
+            "✓ Profile is valid ({} base + {} layer mappings)",
+            prof.mappings.len(),
+            prof.layer_mappings.len()
+        );
     } else {
         if !errors.is_empty() {
             eprintln!("✗ {} error(s):", errors.len());
@@ -557,8 +632,15 @@ fn validate_profile(profile: Option<&str>, file_path: Option<PathBuf>) {
     }
 }
 
-fn run_test_mode(profile: Option<&str>, file_path: Option<PathBuf>, layout_override: Option<Layout>) {
-    let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
+fn run_test_mode(
+    profile: Option<&str>,
+    file_path: Option<PathBuf>,
+    layout_override: Option<Layout>,
+) {
+    let mut gilrs = Gilrs::new().unwrap_or_else(|e| {
+        eprintln!("Error: Failed to initialize gamepad library: {}", e);
+        std::process::exit(1);
+    });
 
     let layout = detect_layout(&gilrs, layout_override);
 
@@ -585,7 +667,8 @@ fn run_test_mode(profile: Option<&str>, file_path: Option<PathBuf>, layout_overr
                 EventType::ButtonPressed(button, _) => {
                     let display = button_display_name(button, layout);
                     let canonical = button_canonical_name(button);
-                    let mapped = mappings.get(canonical)
+                    let mapped = mappings
+                        .get(canonical)
                         .map(|k| format!(" → [{}]", k))
                         .unwrap_or_else(|| " (unmapped)".to_string());
                     println!("  ▶ {}{}", display, mapped);
@@ -593,10 +676,8 @@ fn run_test_mode(profile: Option<&str>, file_path: Option<PathBuf>, layout_overr
                 EventType::ButtonReleased(button, _) => {
                     println!("  ◀ {} released", button_display_name(button, layout));
                 }
-                EventType::AxisChanged(axis, value, _) => {
-                    if value.abs() > 0.5 {
-                        println!("  ↔ Axis {:?} = {:.2}", axis, value);
-                    }
+                EventType::AxisChanged(axis, value, _) if value.abs() > 0.5 => {
+                    println!("  ↔ Axis {:?} = {:.2}", axis, value);
                 }
                 _ => {}
             }
@@ -606,7 +687,10 @@ fn run_test_mode(profile: Option<&str>, file_path: Option<PathBuf>, layout_overr
 }
 
 fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override: Option<Layout>) {
-    let gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
+    let gilrs = Gilrs::new().unwrap_or_else(|e| {
+        eprintln!("Error: Failed to initialize gamepad library: {}", e);
+        std::process::exit(1);
+    });
 
     let layout = detect_layout(&gilrs, layout_override);
     let cfg = profile::Profile::load(profile, file_path).ok();
@@ -636,7 +720,10 @@ fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
         }
         let uuid = gamepad.uuid();
         if uuid != [0u8; 16] {
-            let uuid_str = uuid.iter().map(|b| format!("{:02x}", b)).collect::<String>();
+            let uuid_str = uuid
+                .iter()
+                .map(|b| format!("{:02x}", b))
+                .collect::<String>();
             println!("     UUID:      {}", uuid_str);
         }
         found_gamepad = true;
@@ -654,7 +741,10 @@ fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
     println!("  │              [LT]      [RT]               │");
     println!("  │                                           │");
     println!("  │       ┌───┐                 [{}]           │", face[2]);
-    println!("  │       │ ↑ │              [{}]   [{}]        │", face[3], face[1]);
+    println!(
+        "  │       │ ↑ │              [{}]   [{}]        │",
+        face[3], face[1]
+    );
     println!("  │    ┌──┼───┼──┐              [{}]           │", face[0]);
     println!("  │    │ ←│   │→ │                            │");
     println!("  │    └──┼───┼──┘                            │");
@@ -667,30 +757,58 @@ fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
 
     if let Some(cfg) = &cfg {
         println!("  ┌──────────────────┬──────────────────────┬──────────────────────┐");
-        println!("  │ Button           │ Normal               │ Layer ({:<5})        │", cfg.layer_button);
+        println!(
+            "  │ Button           │ Normal               │ Layer ({:<5})        │",
+            cfg.layer_button
+        );
         println!("  ├──────────────────┼──────────────────────┼──────────────────────┤");
 
         let all_buttons = [
-            face[0], face[1], face[2], face[3],
-            "DPadUp", "DPadDown", "DPadLeft", "DPadRight",
-            "LB", "RB", "LT", "RT",
-            "LS", "RS", "Select", "Start",
+            face[0],
+            face[1],
+            face[2],
+            face[3],
+            "DPadUp",
+            "DPadDown",
+            "DPadLeft",
+            "DPadRight",
+            "LB",
+            "RB",
+            "LT",
+            "RT",
+            "LS",
+            "RS",
+            "Select",
+            "Start",
         ];
 
         for name in &all_buttons {
             let button = parse_button(name);
-            let normal = button.and_then(|b| {
-                cfg.mappings.iter().find(|(k, _)| parse_button(k) == Some(b)).map(|(_, v)| v.as_str())
-            }).unwrap_or("—");
-            let layer = button.and_then(|b| {
-                cfg.layer_mappings.iter().find(|(k, _)| parse_button(k) == Some(b)).map(|(_, v)| v.as_str())
-            }).unwrap_or("—");
+            let normal = button
+                .and_then(|b| {
+                    cfg.mappings
+                        .iter()
+                        .find(|(k, _)| parse_button(k) == Some(b))
+                        .map(|(_, v)| v.as_str())
+                })
+                .unwrap_or("—");
+            let layer = button
+                .and_then(|b| {
+                    cfg.layer_mappings
+                        .iter()
+                        .find(|(k, _)| parse_button(k) == Some(b))
+                        .map(|(_, v)| v.as_str())
+                })
+                .unwrap_or("—");
             println!("  │ {:<16} │ {:<20} │ {:<20} │", name, normal, layer);
         }
 
         println!("  └──────────────────┴──────────────────────┴──────────────────────┘");
         if !cfg.layer_mappings.is_empty() {
-            println!("\n  Hold [{}] + button for layer actions.", cfg.layer_button);
+            println!(
+                "\n  Hold [{}] + button for layer actions.",
+                cfg.layer_button
+            );
         }
     } else {
         println!("  No profile loaded for '{}'.", profile_name);
@@ -728,7 +846,10 @@ fn open_profile(profile: Option<&str>) {
     } else if cfg!(target_os = "macos") {
         Command::new("open").arg("-t").arg(&path).status()
     } else if cfg!(target_os = "windows") {
-        Command::new("cmd").args(["/C", "start", ""]).arg(&path).status()
+        Command::new("cmd")
+            .args(["/C", "start", ""])
+            .arg(&path)
+            .status()
     } else {
         Command::new("xdg-open").arg(&path).status()
     };
@@ -752,8 +873,16 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         ("Command Palette", "super+shift+p", "Open command palette"),
         ("Quick Open", "super+p", "Quick open file by name"),
         ("Copilot Chat", "ctrl+super+i", "Toggle Copilot Chat panel"),
-        ("Accept Suggestion", "tab", "Accept Copilot/autocomplete suggestion"),
-        ("Reject Suggestion", "escape", "Dismiss suggestion or dialog"),
+        (
+            "Accept Suggestion",
+            "tab",
+            "Accept Copilot/autocomplete suggestion",
+        ),
+        (
+            "Reject Suggestion",
+            "escape",
+            "Dismiss suggestion or dialog",
+        ),
         ("Explorer", "super+shift+e", "Show file explorer sidebar"),
         ("Extensions", "super+shift+x", "Show extensions panel"),
         ("Toggle Terminal", "ctrl+`", "Show/hide integrated terminal"),
@@ -774,7 +903,10 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         ("Outdent", "shift+tab", "Shift+Tab / Outdent"),
     ];
 
-    let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
+    let mut gilrs = Gilrs::new().unwrap_or_else(|e| {
+        eprintln!("Error: Failed to initialize gamepad library: {}", e);
+        std::process::exit(1);
+    });
 
     let layout = detect_layout(&gilrs, layout_override);
 
@@ -911,6 +1043,10 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         std::process::exit(1);
     }
 
-    println!("\n  ✓ Saved {} mapping(s) to: {}", prof.mappings.len(), save_path.display());
+    println!(
+        "\n  ✓ Saved {} mapping(s) to: {}",
+        prof.mappings.len(),
+        save_path.display()
+    );
     println!("    Run with: couchpad --profile {}", profile_name);
 }

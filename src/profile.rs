@@ -25,8 +25,8 @@ impl Profile {
 
         // If an explicit file path is given, use it directly
         if let Some(p) = path {
-            let content = fs::read_to_string(&p)
-                .map_err(|e| format!("Failed to read profile: {}", e))?;
+            let content =
+                fs::read_to_string(&p).map_err(|e| format!("Failed to read profile: {}", e))?;
             return serde_json::from_str(&content)
                 .map_err(|e| format!("Failed to parse profile: {}", e));
         }
@@ -42,8 +42,9 @@ impl Profile {
 
         // Fall back to embedded built-in profiles
         if let Some(content) = builtin_profile(profile_name) {
-            return serde_json::from_str(content)
-                .map_err(|e| format!("Failed to parse built-in profile '{}': {}", profile_name, e));
+            return serde_json::from_str(content).map_err(|e| {
+                format!("Failed to parse built-in profile '{}': {}", profile_name, e)
+            });
         }
 
         Err(format!(
@@ -63,11 +64,10 @@ impl Profile {
 
         // Use the embedded built-in profile if available, otherwise a minimal default
         let content = builtin_profile(profile_name).unwrap_or(
-            "{\n  \"layer_button\": \"Home\",\n  \"mappings\": {},\n  \"layer_mappings\": {}\n}"
+            "{\n  \"layer_button\": \"Home\",\n  \"mappings\": {},\n  \"layer_mappings\": {}\n}",
         );
 
-        fs::write(&file_path, content)
-            .map_err(|e| format!("Failed to write profile: {}", e))?;
+        fs::write(&file_path, content).map_err(|e| format!("Failed to write profile: {}", e))?;
 
         Ok(file_path)
     }
@@ -84,10 +84,11 @@ impl Profile {
             for entry in entries {
                 let entry = entry.map_err(|e| format!("Failed to read entry: {}", e))?;
                 let path = entry.path();
-                if path.extension().and_then(|e| e.to_str()) == Some("json") {
-                    if let Some(stem) = path.file_stem().and_then(|s| s.to_str()) {
-                        profiles.push((stem.to_string(), false));
-                    }
+                if path.extension().and_then(|e| e.to_str()) != Some("json") {
+                    continue;
+                }
+                if let Some(stem) = path.file_stem().and_then(|s| s.to_str()) {
+                    profiles.push((stem.to_string(), false));
                 }
             }
         }
