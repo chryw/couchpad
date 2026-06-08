@@ -27,14 +27,11 @@ GETTING STARTED:
     $ gamepad-mapper --test              # Press buttons to see their names
     $ gamepad-mapper --edit              # Open profile to customize
 
-  Step 3: Grant permissions (macOS only)
-  ─────────────────────────────────────────
-    The first time you run, macOS will ask for Accessibility permission.
-    Go to: System Settings → Privacy & Security → Accessibility
-    Toggle ON your terminal app (Terminal, iTerm2, or VS Code).
-
-  Step 4: Run!
+  Step 3: Run!
   ─────────────────────────────────────────
     $ gamepad-mapper                     # Start with default profile
     $ gamepad-mapper --profile vscode    # Start with a named profile
     Press Ctrl+C to stop.
+
+  NOTE: On macOS, you'll be prompted to grant Accessibility permission on
+  first run. See the README for details.

@@ -47,22 +47,13 @@ gamepad-mapper --setup
 
 ## Usage
 
-```
-gamepad-mapper [OPTIONS]
+Run `gamepad-mapper --help` for the full option list. A few highlights:
 
-OPTIONS:
-  (no flags)             Start with the default profile
-  --profile <name>       Use a named profile
-  --layout <type>        Override controller layout (xbox or switch)
-  --setup                Interactive setup wizard
-  --init                 Create a new profile
-  --edit                 Open profile in your default editor
-  --validate             Check profile for errors
-  --info                 Show controller info and current mappings
-  --test                 Test mode: show button presses
-  --list                 List and pick a profile to run
-  --load <path>          Load a profile from a specific file path
-  --help, -h             Show full help
+```bash
+gamepad-mapper --profile vscode   # Run a named profile
+gamepad-mapper --setup            # Interactive wizard to map buttons
+gamepad-mapper --test             # See raw button names from controller
+gamepad-mapper --list             # Pick a profile interactively
 ```
 
 ## Documentation
