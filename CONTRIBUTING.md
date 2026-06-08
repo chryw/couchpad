@@ -1,5 +1,15 @@
 # Contributing
 
+## Key concepts
+
+A few terms in the codebase come from third-party libraries and platform APIs:
+
+- **South, East, North, West** — how [gilrs](https://docs.rs/gilrs/latest/gilrs/ev/enum.Button.html) names the four face buttons by position, not label. South=bottom (Xbox A), East=right (Xbox B), North=top (Xbox Y), West=left (Xbox X).
+- **`super` modifier** — a cross-platform abstraction we define. It resolves to `Cmd` (⌘) on macOS and `Ctrl` on Windows, so one profile works on both platforms.
+- **CGEvent / CGKeyCode** — macOS [Core Graphics](https://developer.apple.com/documentation/coregraphics/cgevent) API for synthesizing keyboard input. Keycodes are hardware scan codes, not characters.
+- **SendInput / VK codes** — Windows [SendInput](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput) API for simulating input. Uses [Virtual-Key codes](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
+- **gilrs** — [Game Input Library for Rust](https://docs.rs/gilrs/latest/gilrs/). Provides cross-platform gamepad detection and event polling.
+
 ## Setup
 
 ```bash
