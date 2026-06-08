@@ -72,7 +72,7 @@ OPTIONS:
 
 | Doc | What's in it |
 |-----|--------------|
-| [Configuration](docs/configuration.md) | Profile format, built-in profiles, button/key reference, layers |
+| [Profile Reference](docs/profile-reference.md) | Profile format, built-in profiles, button/key names, layers |
 | [VS Code Guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
 
 ## Permissions

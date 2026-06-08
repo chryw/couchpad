@@ -1,4 +1,4 @@
-# Configuration
+# Profile Reference
 
 ## Profile Location
 

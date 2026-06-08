@@ -32,7 +32,7 @@ src/
   emitter_windows.rs   Windows SendInput key simulation
 docs/
   help/                Plain text fragments embedded in --help via include_str!()
-  configuration.md     Profile format and reference (web docs)
+  profile-reference.md Profile format, button/key names, layers (web docs)
   vscode-guide.md      VS Code vibe coding guide (web docs)
 profiles/              Built-in profile JSON files
 ```
@@ -45,7 +45,7 @@ profiles/              Built-in profile JSON files
 ## Adding a Profile
 
 1. Create a new JSON file in `profiles/`
-2. Add a description to the "Using Built-in Profiles" section in `docs/configuration.md`
+2. Add a description to the "Using Built-in Profiles" section in `docs/profile-reference.md`
 3. Optionally add a dedicated guide in `docs/`
 
 ## Guidelines
