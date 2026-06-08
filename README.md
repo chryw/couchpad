@@ -30,17 +30,27 @@ Then jump to [Quick start](#quick-start).
 
 ### Build from source
 
+Requires [Rust](https://rustup.rs/).
+
 ```bash
 git clone https://github.com/YOUR_USERNAME/gamepad-mapper.git
 cd gamepad-mapper
 cargo build --release
-./target/release/gamepad-mapper --profile vscode
+```
+
+Optionally install to your PATH:
+
+```bash
+cargo install --path .
 ```
 
 ## Quick start
 
+1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
+2. Run:
+
 ```bash
-# Run with a built-in profile (works immediately, no setup needed)
+# Use a built-in profile (works immediately, no setup needed)
 gamepad-mapper --profile vscode
 
 # Or create your own with the interactive wizard

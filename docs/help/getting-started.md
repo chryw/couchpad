@@ -17,7 +17,7 @@ GETTING STARTED:
   Step 2: Set up gamepad-mapper
   ─────────────────────────────────────────
     Option A — Use a built-in profile (quickest):
-    $ gamepad-mapper --profile vscode    # Works immediately
+    $ gamepad-mapper --profile vscode    # Starts immediately
 
     Option B — Interactive wizard:
     $ gamepad-mapper --setup             # Pick actions, press buttons
@@ -26,12 +26,9 @@ GETTING STARTED:
     $ gamepad-mapper --init              # Create default profile
     $ gamepad-mapper --test              # Press buttons to see their names
     $ gamepad-mapper --edit              # Open profile to customize
+    $ gamepad-mapper                     # Run with your custom profile
 
-  Step 3: Run!
-  ─────────────────────────────────────────
-    $ gamepad-mapper                     # Start with default profile
-    $ gamepad-mapper --profile vscode    # Start with a named profile
-    Press Ctrl+C to stop.
+  Press Ctrl+C to stop.
 
   NOTE: On macOS, you'll be prompted to grant Accessibility permission on
   first run. See the README for details.
