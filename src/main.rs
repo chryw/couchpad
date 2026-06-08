@@ -177,6 +177,37 @@ fn main() {
         return;
     }
 
+    // First-run experience: if no explicit profile/flags given and no user profile on disk,
+    // offer a friendly onboarding choice instead of silently using the built-in default.
+    if profile.is_none() && file_path.is_none() && !profile::profile_path("default").exists() {
+        println!("🎮 Welcome to Gamepad Mapper!\n");
+        println!("  Looks like your first time. How would you like to start?\n");
+        println!("   [1] Interactive wizard — pick actions, press buttons to bind");
+        println!("   [2] Use the VS Code profile — pre-made for Copilot Chat");
+        println!("   [3] Use the default profile — basic navigation keys");
+        println!();
+        print!("  Choose (1/2/3): ");
+        use std::io::Write;
+        std::io::stdout().flush().ok();
+
+        let mut input = String::new();
+        if std::io::stdin().read_line(&mut input).is_ok() {
+            match input.trim() {
+                "1" => {
+                    run_setup(None, layout_override);
+                    return;
+                }
+                "2" => {
+                    run_mapper(Some("vscode"), None, layout_override);
+                    return;
+                }
+                _ => {
+                    // Default: run with built-in default
+                }
+            }
+        }
+    }
+
     // Run the mapper
     run_mapper(profile.as_deref(), file_path, layout_override);
 }

@@ -26,12 +26,10 @@ Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input
 3. Run it:
 
    ```bash
-   # Interactive wizard — maps buttons to your choice of shortcuts
-   gamepad-mapper --setup
-
-   # Or start immediately with a pre-made VS Code profile
-   gamepad-mapper --profile vscode
+   gamepad-mapper
    ```
+
+   On first run, you'll be prompted to choose: interactive wizard, a pre-made VS Code profile, or basic defaults.
 
 Keep the terminal open — the tool runs in the foreground and maps buttons until you press Ctrl+C.
 
