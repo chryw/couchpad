@@ -15,14 +15,16 @@ Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input
 3. Open a terminal and run it:
 
    ```bash
-   # macOS — make executable, then run
-   chmod +x gamepad-mapper-macos-arm64
-   ./gamepad-mapper-macos-arm64
+   # macOS — rename, make executable, run
+   mv gamepad-mapper-macos-arm64 gamepad-mapper
+   chmod +x gamepad-mapper
+   ./gamepad-mapper
    ```
 
    ```powershell
-   # Windows — just run it
-   .\gamepad-mapper-windows-x86_64.exe
+   # Windows — rename and run
+   ren gamepad-mapper-windows-x86_64.exe gamepad-mapper.exe
+   .\gamepad-mapper.exe
    ```
 
    On first run, you'll be prompted to choose: interactive wizard, a pre-made VS Code profile, or basic defaults.
