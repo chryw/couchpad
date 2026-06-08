@@ -43,17 +43,9 @@ gamepad-mapper --profile vscode
 
 # Or create your own with the interactive wizard
 gamepad-mapper --setup
-```
 
-## Usage
-
-Run `gamepad-mapper --help` for the full option list. A few highlights:
-
-```bash
-gamepad-mapper --profile vscode   # Run a named profile
-gamepad-mapper --setup            # Interactive wizard to map buttons
-gamepad-mapper --test             # See raw button names from controller
-gamepad-mapper --list             # Pick a profile interactively
+# See all options
+gamepad-mapper --help
 ```
 
 ## Documentation
