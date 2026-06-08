@@ -15,6 +15,7 @@ OPTIONS:
   --setup                Step-by-step wizard: pick an action, then press the button to bind it
   --test                 Show raw button/axis events from your controller (no keys emitted)
   --validate             Check your profile for invalid button names or key combos
+  --version, -V          Show version number
 
 EXAMPLES:
   couchpad                        Start with default profile

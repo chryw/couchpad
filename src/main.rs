@@ -89,6 +89,12 @@ fn main() {
         return;
     }
 
+    // Handle --version flag
+    if args.iter().any(|a| a == "--version" || a == "-V") {
+        println!("couchpad {}", env!("CARGO_PKG_VERSION"));
+        return;
+    }
+
     // Handle --install flag: self-install to a PATH directory
     if args.iter().any(|a| a == "--install") {
         install::run();
