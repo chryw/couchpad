@@ -26,6 +26,8 @@ sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
 
 On Windows, move the `.exe` to a folder in your `PATH`, or run it directly.
 
+Then jump to [Quick start](#quick-start).
+
 ### Build from source
 
 ```bash
