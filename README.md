@@ -2,6 +2,8 @@
 
 A minimal CLI tool that maps game controller buttons to keyboard shortcuts. Built in Rust, works on macOS and Windows.
 
+Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input.
+
 ## Install
 
 ### Download (recommended)
@@ -48,114 +50,46 @@ gamepad-mapper [OPTIONS]
 OPTIONS:
   (no flags)             Start the mapper with the default profile
   --profile <name>       Use a specific profile
+  --layout <type>        Override controller layout (xbox or switch)
   --setup                Interactive setup wizard
   --init                 Create a new profile config file
   --edit                 Open config in your default editor
   --info                 Show controller info and keymap table
   --test                 Test mode: show button presses
   --list                 List and pick a profile to run
+  --config <path>        Use a custom config file path
   --help, -h             Show full help
 ```
 
-## Configuration
+## Profiles
 
-Profiles are JSON files stored in:
-- **macOS:** `~/Library/Application Support/gamepad-mapper/<profile>.json`
-- **Windows:** `%APPDATA%/gamepad-mapper/<profile>.json`
+Ready-to-use profiles in [`profiles/`](profiles/):
 
-Example config:
-```json
-{
-  "layer_button": "Home",
-  "mappings": {
-    "A": "return",
-    "B": "escape",
-    "DPadUp": "up",
-    "DPadDown": "down",
-    "LT": "super+shift+p",
-    "Start": "super+s"
-  },
-  "layer_mappings": {
-    "A": "super+s",
-    "DPadUp": "alt+up",
-    "Select": "ctrl+super+i"
-  }
-}
+| Profile | Use Case |
+|---------|----------|
+| [`default.json`](profiles/default.json) | Generic navigation — browse, scroll, tabs, clipboard |
+| [`vscode.json`](profiles/vscode.json) | VS Code vibe coding with Copilot Chat |
+
+Copy to your config directory and run:
+```bash
+cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json
+gamepad-mapper --profile vscode
 ```
 
-### Layer system
+## Documentation
 
-Hold the layer button (default: `Home`) + press another button for alternate mappings. This doubles your available actions.
-
-### Cross-platform modifier
-
-Use `super` in configs — it maps to `Cmd` on macOS and `Ctrl` on Windows. One profile works on both platforms.
-
-## Button Names
-
-| Button | Name |
-|--------|------|
-| Face buttons | `A`, `B`, `X`, `Y` |
-| D-pad | `DPadUp`, `DPadDown`, `DPadLeft`, `DPadRight` |
-| Bumpers | `LB`, `RB` |
-| Triggers | `LT`, `RT` |
-| Thumbsticks | `LS`, `RS` |
-| Menu | `Select`, `Start` |
-| Home | `Home` |
+| Doc | Description |
+|-----|-------------|
+| [Configuration](docs/configuration.md) | Config format, button names, key names, layers, cross-platform |
+| [VS Code Guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
+| [Profiles README](profiles/README.md) | Profile installation and descriptions |
 
 ## Permissions
 
 **macOS:** Grant Accessibility permission to your terminal app:
 System Settings → Privacy & Security → Accessibility
 
-## Example Profiles
-
-See the [`profiles/`](profiles/) directory for ready-to-use configs:
-- `default.json` — Generic navigation (browse, scroll, tabs, clipboard)
-- `vscode.json` — VS Code vibe coding with Copilot Chat
-
-## VS Code + Controller (Vibe Coding)
-
-Use a game controller to drive VS Code with Copilot Chat — no keyboard needed for the AI-assisted workflow.
-
-### Setup
-
-1. Install the [VS Code Speech](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-speech) extension for voice input
-2. Copy the vscode profile: `cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json`
-3. Run: `gamepad-mapper --profile vscode`
-
-### Workflow
-
-1. **LT** → Open Copilot Chat
-2. **Speak** your prompt (via VS Code Speech, or use macOS dictation)
-3. **A** (Enter) → Send message
-4. **DPad** → Scroll through the response
-5. **Y/RB** (Tab) → Accept Copilot's suggestion
-6. **Start** → Save
-7. **LS** → Undo if something went wrong
-
-### Keymap (vscode profile)
-
-| Button | Normal | Layer (Home+) |
-|--------|--------|---------------|
-| A | Enter (send/confirm) | Save |
-| B | Escape (dismiss) | Close tab |
-| X | Space | Ctrl+C (interrupt) |
-| Y | Tab (accept suggestion) | Toggle terminal |
-| DPad | Navigate | Switch tabs / Back-Forward |
-| LB/RB | Shift+Tab / Tab | Undo / Redo |
-| LT | **Copilot Chat** | Command Palette |
-| RT | Quick Open (files) | Run (F5) |
-| LS/RS | Undo / Redo | Find / Toggle comment |
-| Select | Explorer sidebar | Extensions |
-| Start | Save | New file |
-
-### Tips
-
-- **Voice input:** With VS Code Speech installed, click the mic icon in chat or press `⌥⌘V` to dictate. Pair with the controller for a fully hands-free coding experience.
-- **"Hey Code":** Enable `accessibility.voice.keywordActivation` in VS Code settings to start chat by saying "Hey Code" — no button press needed.
-- **Controller layout:** The app auto-detects Xbox vs Nintendo Switch button labels. Use `--layout switch` to override.
-
 ## License
 
 MIT
+

@@ -1,6 +1,6 @@
-# Example Profiles
+# Profiles
 
-Pre-made profiles you can copy to your config directory.
+Pre-made profiles you can copy to your config directory and use immediately.
 
 ## Installation
 
@@ -23,10 +23,36 @@ gamepad-mapper --profile vscode
 
 ## Available Profiles
 
-### `default.json`
-Basic gamepad-to-keyboard mapping. No layer mappings. Good starting point.
+### `default.json` — Generic Navigation
 
-### `vscode.json`
-Optimized for VS Code vibe coding with Copilot. Includes layer mappings
-(hold Home + button) for extended actions like switching tabs, moving lines,
-toggling Copilot Chat, and more.
+Designed for browsing, reading, and general app navigation. No app-specific shortcuts.
+
+**Base layer:** Enter, Escape, Space, Backspace, Arrows, Prev/Next tab, Page Up/Down, Home/End
+
+**Layer (Home+):** Paste, Copy, Ctrl+C, Select All, Tab switching, Back/Forward, Undo/Redo, Zoom, Find, Close tab
+
+### `vscode.json` — VS Code Vibe Coding
+
+Optimized for Copilot Chat-driven coding. The primary workflow is: open chat → speak/type prompt → accept suggestions → save.
+
+**Base layer:** Enter, Escape, Tab (accept), Copilot Chat (LT), Quick Open (RT), Undo/Redo, Save
+
+**Layer (Home+):** Close tab, Terminal, Interrupt, Command Palette, Run (F5), Find, Switch tabs
+
+See the [VS Code Guide](../docs/vscode-guide.md) for the full workflow and voice input setup.
+
+## Creating Your Own
+
+```bash
+# Start from an existing profile
+cp profiles/default.json ~/Library/Application\ Support/gamepad-mapper/myprofile.json
+
+# Edit it
+gamepad-mapper --profile myprofile --edit
+
+# Or use the interactive wizard
+gamepad-mapper --profile myprofile --setup
+```
+
+See [Configuration docs](../docs/configuration.md) for button names, key names, and format reference.
+
