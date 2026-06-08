@@ -3,13 +3,25 @@ use core_graphics::event_source::{CGEventSource, CGEventSourceStateID};
 
 /// Simulate a key press + release with optional modifier flags.
 pub fn send_key(keycode: u16, flags: u64) {
-    let source =
-        CGEventSource::new(CGEventSourceStateID::HIDSystemState).expect("Failed to create event source");
+    let source = match CGEventSource::new(CGEventSourceStateID::HIDSystemState) {
+        Ok(s) => s,
+        Err(_) => {
+            eprintln!("  ⚠ Failed to create event source (check Accessibility permissions)");
+            return;
+        }
+    };
 
-    let key_down = CGEvent::new_keyboard_event(source.clone(), keycode, true)
-        .expect("Failed to create key-down event");
-    let key_up = CGEvent::new_keyboard_event(source, keycode, false)
-        .expect("Failed to create key-up event");
+    let key_down = match CGEvent::new_keyboard_event(source.clone(), keycode, true) {
+        Ok(e) => e,
+        Err(_) => {
+            eprintln!("  ⚠ Failed to create key event for keycode {}", keycode);
+            return;
+        }
+    };
+    let key_up = match CGEvent::new_keyboard_event(source, keycode, false) {
+        Ok(e) => e,
+        Err(_) => return,
+    };
 
     if flags != 0 {
         let cg_flags = CGEventFlags::from_bits_truncate(flags);

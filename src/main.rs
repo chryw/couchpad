@@ -185,7 +185,7 @@ fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>, layout_overri
     };
 
     // Initialize gamepad listener
-    let mut gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
+    let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
 
     // Auto-detect layout from controller
     let layout = detect_layout(&gilrs, layout_override);
@@ -392,6 +392,30 @@ fn button_display_name(button: Button, layout: Layout) -> &'static str {
     }
 }
 
+/// Get the config-canonical name for a button (always Xbox convention)
+fn button_config_name(button: Button) -> &'static str {
+    match button {
+        Button::South => "A",
+        Button::East => "B",
+        Button::North => "Y",
+        Button::West => "X",
+        Button::DPadUp => "DPadUp",
+        Button::DPadDown => "DPadDown",
+        Button::DPadLeft => "DPadLeft",
+        Button::DPadRight => "DPadRight",
+        Button::LeftTrigger => "LB",
+        Button::RightTrigger => "RB",
+        Button::LeftTrigger2 => "LT",
+        Button::RightTrigger2 => "RT",
+        Button::LeftThumb => "LS",
+        Button::RightThumb => "RS",
+        Button::Select => "Select",
+        Button::Start => "Start",
+        Button::Mode => "Home",
+        _ => "Unknown",
+    }
+}
+
 /// Face button display labels in the order: bottom, right, top, left
 fn face_button_labels(layout: Layout) -> [&'static str; 4] {
     match layout {
@@ -401,7 +425,7 @@ fn face_button_labels(layout: Layout) -> [&'static str; 4] {
 }
 
 fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
-    let mut gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
+    let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
 
     let layout = detect_layout(&gilrs, layout_override);
 
@@ -450,7 +474,7 @@ fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>, layout_ove
 }
 
 fn print_info(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
-    let gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
+    let gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
 
     let layout = detect_layout(&gilrs, layout_override);
     let cfg = config::Config::load_profile(profile, config_path).ok();
@@ -611,7 +635,7 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         ("Outdent", "shift+tab", "Shift+Tab / Outdent"),
     ];
 
-    let mut gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
+    let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
 
     let layout = detect_layout(&gilrs, layout_override);
 
@@ -709,10 +733,12 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         }
 
         if let Some(button) = detected_button {
-            let btn_name = button_display_name(button, layout).to_string();
-            println!("    ✓ Detected: {}", btn_name);
-            println!("    ✓ Mapped: {} → {}\n", btn_name, combo);
-            mappings.insert(btn_name, combo.to_string());
+            // Always save Xbox-convention names in config (layout-independent)
+            let config_name = button_config_name(button);
+            let display_name = button_display_name(button, layout);
+            println!("    ✓ Detected: {}", display_name);
+            println!("    ✓ Mapped: {} → {}\n", display_name, combo);
+            mappings.insert(config_name.to_string(), combo.to_string());
         }
     }
 
@@ -733,8 +759,18 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
         layer_button: "Home".to_string(),
     };
 
-    let json = serde_json::to_string_pretty(&cfg).expect("Failed to serialize config");
-    std::fs::write(&config_path, json).expect("Failed to write config");
+    let json = match serde_json::to_string_pretty(&cfg) {
+        Ok(j) => j,
+        Err(e) => {
+            eprintln!("\n  ✗ Failed to serialize config: {}", e);
+            std::process::exit(1);
+        }
+    };
+
+    if let Err(e) = std::fs::write(&config_path, json) {
+        eprintln!("\n  ✗ Failed to write config: {}", e);
+        std::process::exit(1);
+    }
 
     println!("\n  ✓ Saved {} mapping(s) to: {}", cfg.mappings.len(), config_path.display());
     println!("    Run with: gamepad-mapper --profile {}", profile_name);
