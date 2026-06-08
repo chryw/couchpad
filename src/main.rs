@@ -12,6 +12,55 @@ use std::env;
 use std::path::PathBuf;
 use std::process::Command;
 
+/// Controller layout — determines display labels for face buttons.
+/// Config always uses Xbox convention (A=bottom, B=right, X=left, Y=top).
+/// Layout only affects what's shown in the UI so labels match the physical controller.
+#[derive(Debug, Clone, Copy, PartialEq)]
+enum Layout {
+    Xbox,
+    Switch,
+}
+
+impl Layout {
+    fn from_str(s: &str) -> Option<Self> {
+        match s.to_lowercase().as_str() {
+            "xbox" => Some(Layout::Xbox),
+            "switch" | "nintendo" => Some(Layout::Switch),
+            _ => None,
+        }
+    }
+
+    /// Auto-detect layout from controller name
+    fn detect(controller_name: &str) -> Self {
+        let name = controller_name.to_lowercase();
+        if name.contains("nintendo") || name.contains("switch")
+            || name.contains("pro controller") || name.contains("joy-con")
+        {
+            Layout::Switch
+        } else {
+            Layout::Xbox
+        }
+    }
+
+    fn name(&self) -> &'static str {
+        match self {
+            Layout::Xbox => "xbox",
+            Layout::Switch => "switch",
+        }
+    }
+}
+
+/// Detect layout from the first connected gamepad, or fall back to Xbox
+fn detect_layout(gilrs: &Gilrs, layout_override: Option<Layout>) -> Layout {
+    if let Some(l) = layout_override {
+        return l;
+    }
+    for (_id, gamepad) in gilrs.gamepads() {
+        return Layout::detect(gamepad.name());
+    }
+    Layout::Xbox
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -26,6 +75,12 @@ fn main() {
         .windows(2)
         .find(|w| w[0] == "--config")
         .map(|w| PathBuf::from(&w[1]));
+
+    // Parse --layout override (auto-detected from controller if not specified)
+    let layout_override = args
+        .windows(2)
+        .find(|w| w[0] == "--layout")
+        .and_then(|w| Layout::from_str(&w[1]));
 
     // Handle --help flag
     if args.iter().any(|a| a == "--help" || a == "-h") {
@@ -57,14 +112,14 @@ fn main() {
                             if num >= 1 && num <= profiles.len() {
                                 let selected = &profiles[num - 1];
                                 println!("\n  Starting profile: {}\n", selected);
-                                run_mapper(Some(selected.as_str()), None);
+                                run_mapper(Some(selected.as_str()), None, layout_override);
                                 return;
                             }
                         }
                         // Try matching by name
                         if let Some(matched) = profiles.iter().find(|p| p.as_str() == input) {
                             println!("\n  Starting profile: {}\n", matched);
-                            run_mapper(Some(matched.as_str()), None);
+                            run_mapper(Some(matched.as_str()), None, layout_override);
                             return;
                         }
                         eprintln!("  Invalid selection: {}", input);
@@ -93,7 +148,7 @@ fn main() {
 
     // Handle --info flag
     if args.iter().any(|a| a == "--info") {
-        print_info(profile.as_deref(), config_path);
+        print_info(profile.as_deref(), config_path, layout_override);
         return;
     }
 
@@ -105,21 +160,21 @@ fn main() {
 
     // Handle --setup flag
     if args.iter().any(|a| a == "--setup") {
-        run_setup(profile.as_deref());
+        run_setup(profile.as_deref(), layout_override);
         return;
     }
 
     // Handle --test flag
     if args.iter().any(|a| a == "--test") {
-        run_test_mode(profile.as_deref(), config_path);
+        run_test_mode(profile.as_deref(), config_path, layout_override);
         return;
     }
 
     // Run the mapper
-    run_mapper(profile.as_deref(), config_path);
+    run_mapper(profile.as_deref(), config_path, layout_override);
 }
 
-fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>) {
+fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
     // Load config
     let cfg = match config::Config::load_profile(profile, config_path) {
         Ok(c) => c,
@@ -128,6 +183,12 @@ fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>) {
             std::process::exit(1);
         }
     };
+
+    // Initialize gamepad listener
+    let mut gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
+
+    // Auto-detect layout from controller
+    let layout = detect_layout(&gilrs, layout_override);
 
     // Build keycode lookup
     let keycode_map = keymap::build_keycode_map();
@@ -175,9 +236,6 @@ fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>) {
         }
     }
 
-    // Initialize gamepad listener
-    let mut gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
-
     let has_layer = !layer_actions.is_empty();
 
     // Print welcome banner
@@ -185,6 +243,7 @@ fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>) {
     println!("│  🎮 Gamepad Mapper                                  │");
     println!("├─────────────────────────────────────────────────────┤");
     println!("│  Profile: {:<41}│", profile.unwrap_or("default"));
+    println!("│  Layout:  {:<41}│", layout.name());
     println!("│  Status:  ✓ Running                                 │");
     println!("│  Stop:    Ctrl+C                                    │");
     println!("└─────────────────────────────────────────────────────┘");
@@ -215,8 +274,9 @@ fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>) {
     println!("  │ Button           │ Normal               │ Layer ({:<5})        │", cfg.layer_button);
     println!("  ├──────────────────┼──────────────────────┼──────────────────────┤");
 
+    let face = face_button_labels(layout);
     let all_buttons = [
-        "A", "B", "Y", "X",
+        face[0], face[1], face[2], face[3],
         "DPadUp", "DPadDown", "DPadLeft", "DPadRight",
         "LB", "RB", "LT", "RT",
         "LS", "RS", "Select", "Start",
@@ -258,7 +318,7 @@ fn run_mapper(profile: Option<&str>, config_path: Option<PathBuf>) {
 
                     if let Some(&(keycode, flags)) = action {
                         let layer_indicator = if layer_active { " [layer]" } else { "" };
-                        println!("  {} → sending key{}", button_display_name(button), layer_indicator);
+                        println!("  {} → sending key{}", button_display_name(button, layout), layer_indicator);
                         emit_key(keycode, flags);
                     }
                 }
@@ -307,13 +367,14 @@ fn parse_button(name: &str) -> Option<Button> {
     }
 }
 
-/// Get the display name for a button (physical label)
-fn button_display_name(button: Button) -> &'static str {
+/// Get the display name for a button based on controller layout.
+/// Config always uses Xbox names; this translates for display purposes.
+fn button_display_name(button: Button, layout: Layout) -> &'static str {
     match button {
-        Button::South => "A",
-        Button::East => "B",
-        Button::North => "Y",
-        Button::West => "X",
+        Button::South => match layout { Layout::Xbox => "A", Layout::Switch => "B" },
+        Button::East => match layout { Layout::Xbox => "B", Layout::Switch => "A" },
+        Button::North => match layout { Layout::Xbox => "Y", Layout::Switch => "X" },
+        Button::West => match layout { Layout::Xbox => "X", Layout::Switch => "Y" },
         Button::DPadUp => "DPadUp",
         Button::DPadDown => "DPadDown",
         Button::DPadLeft => "DPadLeft",
@@ -331,8 +392,18 @@ fn button_display_name(button: Button) -> &'static str {
     }
 }
 
-fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>) {
+/// Face button display labels in the order: bottom, right, top, left
+fn face_button_labels(layout: Layout) -> [&'static str; 4] {
+    match layout {
+        Layout::Xbox => ["A", "B", "Y", "X"],
+        Layout::Switch => ["B", "A", "X", "Y"],
+    }
+}
+
+fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
     let mut gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
+
+    let layout = detect_layout(&gilrs, layout_override);
 
     // Load config to show mapped keys
     let mappings: HashMap<String, String> = match config::Config::load_profile(profile, config_path) {
@@ -342,6 +413,7 @@ fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>) {
 
     println!("🧪 Test Mode — press buttons on your controller");
     println!("   Profile: {}", profile.unwrap_or("default"));
+    println!("   Layout:  {}", layout.name());
     println!("   Shows raw button/axis names and their mapped keys");
     println!("   Press Ctrl+C to stop\n");
 
@@ -354,7 +426,7 @@ fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>) {
         while let Some(event) = gilrs.next_event() {
             match event.event {
                 EventType::ButtonPressed(button, _) => {
-                    let display = button_display_name(button);
+                    let display = button_display_name(button, layout);
                     let internal_name = format!("{:?}", button);
                     let mapped = mappings.get(&internal_name)
                         .or_else(|| mappings.get(display))
@@ -363,7 +435,7 @@ fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>) {
                     println!("  ▶ {}{}", display, mapped);
                 }
                 EventType::ButtonReleased(button, _) => {
-                    println!("  ◀ {} released", button_display_name(button));
+                    println!("  ◀ {} released", button_display_name(button, layout));
                 }
                 EventType::AxisChanged(axis, value, _) => {
                     if value.abs() > 0.5 {
@@ -377,9 +449,10 @@ fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>) {
     }
 }
 
-fn print_info(profile: Option<&str>, config_path: Option<PathBuf>) {
+fn print_info(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
     let gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
 
+    let layout = detect_layout(&gilrs, layout_override);
     let cfg = config::Config::load_profile(profile, config_path).ok();
     let profile_name = profile.unwrap_or("default");
 
@@ -387,6 +460,7 @@ fn print_info(profile: Option<&str>, config_path: Option<PathBuf>) {
     println!("│  🎮 Gamepad Mapper                                  │");
     println!("├─────────────────────────────────────────────────────┤");
     println!("│  Profile: {:<41}│", profile_name);
+    println!("│  Layout:  {:<41}│", layout.name());
     println!("│  Status:  idle (not running)                        │");
     println!("└─────────────────────────────────────────────────────┘");
     println!();
@@ -410,15 +484,16 @@ fn print_info(profile: Option<&str>, config_path: Option<PathBuf>) {
     }
     println!();
 
-    // Controller layout diagram
-    println!("  Controller Layout:");
+    // Controller layout diagram with layout-correct labels
+    let face = face_button_labels(layout);
+    println!("  Controller Layout ({}):", layout.name());
     println!("  ┌──────────────────────────────────────────┐");
     println!("  │              [LB]      [RB]               │");
     println!("  │              [LT]      [RT]               │");
     println!("  │                                           │");
-    println!("  │       ┌───┐                 [Y]           │");
-    println!("  │       │ ↑ │              [X]   [B]        │");
-    println!("  │    ┌──┼───┼──┐              [A]           │");
+    println!("  │       ┌───┐                 [{}]           │", face[2]);
+    println!("  │       │ ↑ │              [{}]   [{}]        │", face[3], face[1]);
+    println!("  │    ┌──┼───┼──┐              [{}]           │", face[0]);
     println!("  │    │ ←│   │→ │                            │");
     println!("  │    └──┼───┼──┘                            │");
     println!("  │       │ ↓ │     [Select] [Start]          │");
@@ -434,7 +509,7 @@ fn print_info(profile: Option<&str>, config_path: Option<PathBuf>) {
         println!("  ├──────────────────┼──────────────────────┼──────────────────────┤");
 
         let all_buttons = [
-            "A", "B", "Y", "X",
+            face[0], face[1], face[2], face[3],
             "DPadUp", "DPadDown", "DPadLeft", "DPadRight",
             "LB", "RB", "LT", "RT",
             "LS", "RS", "Select", "Start",
@@ -470,6 +545,7 @@ USAGE:
 OPTIONS:
    (no flags)             Start the mapper with the default profile
    --profile <name>       Use a specific profile
+   --layout <type>        Override controller layout (xbox or switch, auto-detected)
    --init                 Create a new profile config file
    --setup                Interactive setup wizard (pick actions, press buttons)
    --edit                 Open config in your default editor
@@ -610,7 +686,7 @@ fn open_config(profile: Option<&str>) {
     }
 }
 
-fn run_setup(profile: Option<&str>) {
+fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
     use std::io::{self, Write};
 
     // Known actions with their key combos
@@ -645,6 +721,8 @@ fn run_setup(profile: Option<&str>) {
     ];
 
     let mut gilrs = Gilrs::new().expect("Failed to initialize gamepad library");
+
+    let layout = detect_layout(&gilrs, layout_override);
 
     // Drain any buffered events
     while gilrs.next_event().is_some() {}
@@ -740,7 +818,7 @@ fn run_setup(profile: Option<&str>) {
         }
 
         if let Some(button) = detected_button {
-            let btn_name = button_display_name(button).to_string();
+            let btn_name = button_display_name(button, layout).to_string();
             println!("    ✓ Detected: {}", btn_name);
             println!("    ✓ Mapped: {} → {}\n", btn_name, combo);
             mappings.insert(btn_name, combo.to_string());
