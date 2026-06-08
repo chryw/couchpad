@@ -71,7 +71,7 @@ impl Config {
   "layer_mappings": {
     "A": "super+v",
     "B": "super+c",
-    "X": "super+x",
+    "X": "ctrl+c",
     "Y": "super+a",
     "DPadUp": "super+shift+]",
     "DPadDown": "super+shift+[",
