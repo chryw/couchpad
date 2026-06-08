@@ -14,11 +14,15 @@ Grab the latest binary from [Releases](../../releases):
 - **macOS (Intel):** `gamepad-mapper-macos-x86_64`
 - **Windows:** `gamepad-mapper-windows-x86_64.exe`
 
+After downloading:
+
 ```bash
-# macOS: download, make executable, move to PATH
+# macOS
 chmod +x gamepad-mapper-macos-arm64
 sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
 ```
+
+On Windows, move the `.exe` to a folder in your `PATH`, or run it directly.
 
 ### Build from source
 
@@ -26,7 +30,7 @@ sudo mv gamepad-mapper-macos-arm64 /usr/local/bin/gamepad-mapper
 git clone https://github.com/YOUR_USERNAME/gamepad-mapper.git
 cd gamepad-mapper
 cargo build --release
-# Binary at: target/release/gamepad-mapper
+# Binary at: target/release/gamepad-mapper(.exe on Windows)
 ```
 
 ## Quick start
@@ -43,8 +47,16 @@ gamepad-mapper
 ```
 
 Or use a built-in profile:
+
 ```bash
+# macOS
 cp profiles/vscode.json ~/Library/Application\ Support/gamepad-mapper/vscode.json
+
+# Windows
+copy profiles\vscode.json %APPDATA%\gamepad-mapper\vscode.json
+```
+
+```bash
 gamepad-mapper --profile vscode
 ```
 
@@ -79,6 +91,8 @@ OPTIONS:
 
 **macOS:** Grant Accessibility permission to your terminal app:
 System Settings → Privacy & Security → Accessibility
+
+**Windows:** No extra permissions needed. Run from any terminal.
 
 ## License
 
