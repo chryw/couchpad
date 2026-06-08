@@ -656,8 +656,6 @@ fn print_help() {
     println!();
     print!("{}", include_str!("../docs/help/keys.md"));
     println!();
-    print!("{}", include_str!("../docs/help/tips.md"));
-    println!();
     println!("MORE INFO:");
     println!("  https://github.com/YOUR_USERNAME/gamepad-mapper#readme");
 }
