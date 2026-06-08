@@ -2,7 +2,7 @@
 
 Map a game controller to keyboard shortcuts. That's it.
 
-No GUI, no background service, no account, no ads. A single binary you can read and understand. Built for developers who want a simple, transparent tool — not a feature-rich app they'll never fully trust.
+No GUI, no hidden daemon, no account, no ads. A single binary you can read and understand. It runs in your terminal — you see exactly what it's doing, and it stops when you close it.
 
 Works with any standard gamepad — Xbox, PlayStation, Switch, or cheap Bluetooth mini controllers. Useful for AI-assisted coding from the couch (Copilot Chat, Claude Code, Cursor) or any workflow where you want a few buttons to trigger shortcuts.
 
