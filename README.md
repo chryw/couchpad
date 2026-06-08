@@ -41,11 +41,11 @@ cargo install --path .
 2. Open a terminal and run:
 
 ```bash
-# Use a built-in profile (works immediately, no setup needed)
-gamepad-mapper --profile vscode
-
-# Or create your own with the interactive wizard
+# Interactive wizard — maps buttons to your choice of shortcuts
 gamepad-mapper --setup
+
+# Or start immediately with a pre-made VS Code profile
+gamepad-mapper --profile vscode
 
 # See all options
 gamepad-mapper --help
