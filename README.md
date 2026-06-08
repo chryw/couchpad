@@ -62,6 +62,10 @@ cargo install --path .
 | [Profile reference](docs/profile-reference.md) | Profile format, built-in profiles, button/key names, layers |
 | [VS Code guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for dev setup, architecture, and how to add features.
+
 ## License
 
 MIT
