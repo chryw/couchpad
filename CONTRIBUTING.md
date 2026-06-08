@@ -17,7 +17,6 @@ A few terms in the codebase come from third-party libraries and platform APIs:
 - [Rust](https://www.rust-lang.org/tools/install) (stable toolchain)
 - A Bluetooth or USB game controller (for testing)
 - **macOS:** Accessibility permission granted to your terminal (System Settings → Privacy & Security → Accessibility)
-- **Linux (experimental):** `libudev-dev` package (`apt install libudev-dev` on Debian/Ubuntu)
 
 ```bash
 # Install Rust (if not already installed)
