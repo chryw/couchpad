@@ -2,6 +2,8 @@
 
 A minimal CLI tool that maps game controller buttons to keyboard shortcuts. Built in Rust, works on macOS and Windows.
 
+Works with any controller that supports standard gamepad input — Xbox, PlayStation, Switch Pro, and most Bluetooth mini controllers. The app auto-detects your controller and adjusts button labels accordingly.
+
 Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input.
 
 ## Install
