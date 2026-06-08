@@ -36,13 +36,11 @@ cargo build --release
 ## Quick start
 
 ```bash
-# 1. Run with a built-in profile (works immediately, no setup needed)
+# Run with a built-in profile (works immediately, no setup needed)
 gamepad-mapper --profile vscode
 
-# Or create your own profile from scratch
-gamepad-mapper --init
+# Or create your own with the interactive wizard
 gamepad-mapper --setup
-gamepad-mapper
 ```
 
 ## Usage

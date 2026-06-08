@@ -564,6 +564,12 @@ fn print_info(profile: Option<&str>, file_path: Option<PathBuf>, layout_override
     println!("│  🎮 Gamepad Mapper                                  │");
     println!("├─────────────────────────────────────────────────────┤");
     println!("│  Profile: {:<41}│", profile_name);
+    let user_path = profile::profile_path(profile_name);
+    if user_path.exists() {
+        println!("│  Path:    {:<41}│", user_path.display());
+    } else {
+        println!("│  Source:  {:<41}│", "built-in");
+    }
     println!("│  Layout:  {:<41}│", layout.name());
     println!("│  Status:  idle (not running)                        │");
     println!("└─────────────────────────────────────────────────────┘");

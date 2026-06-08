@@ -16,27 +16,24 @@ GETTING STARTED:
 
   Step 2: Set up gamepad-mapper
   ─────────────────────────────────────────
-    Option A — Interactive wizard (recommended for beginners):
+    Option A — Use a built-in profile (quickest):
+    $ gamepad-mapper --profile vscode    # Works immediately
+
+    Option B — Interactive wizard:
     $ gamepad-mapper --setup             # Pick actions, press buttons
 
-    Option B — Manual setup:
+    Option C — Manual setup:
     $ gamepad-mapper --init              # Create default profile
-    $ gamepad-mapper --info              # Verify controller is detected
     $ gamepad-mapper --test              # Press buttons to see their names
     $ gamepad-mapper --edit              # Open profile to customize
 
-  Step 3: Customize your mappings
-  ─────────────────────────────────────────
-    Edit the profile file shown by --info. Map button names (from --test)
-    to key combos you want to emit.
-
-  Step 4: Grant permissions (macOS only)
+  Step 3: Grant permissions (macOS only)
   ─────────────────────────────────────────
     The first time you run, macOS will ask for Accessibility permission.
     Go to: System Settings → Privacy & Security → Accessibility
     Toggle ON your terminal app (Terminal, iTerm2, or VS Code).
 
-  Step 5: Run!
+  Step 4: Run!
   ─────────────────────────────────────────
     $ gamepad-mapper                     # Start with default profile
     $ gamepad-mapper --profile vscode    # Start with a named profile
