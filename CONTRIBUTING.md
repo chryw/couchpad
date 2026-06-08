@@ -9,6 +9,7 @@ A few terms in the codebase come from third-party libraries and platform APIs:
 - **CGEvent / CGKeyCode** — macOS [Core Graphics](https://developer.apple.com/documentation/coregraphics/cgevent) API for synthesizing keyboard input. Keycodes are hardware scan codes, not characters.
 - **SendInput / VK codes** — Windows [SendInput](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput) API for simulating input. Uses [Virtual-Key codes](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
 - **gilrs** — [Game Input Library for Rust](https://docs.rs/gilrs/latest/gilrs/). Provides cross-platform gamepad detection and event polling.
+- **Layers** — inspired by keyboard firmware like [QMK](https://docs.qmk.fm/feature_layers). Holding a modifier button (default: `Home`) switches to an alternate set of mappings, doubling the number of available actions without extra buttons. Same concept as Shift on a keyboard giving you uppercase letters.
 
 ## Setup
 
