@@ -39,7 +39,7 @@ Optimized for Copilot Chat-driven coding. The primary workflow is: open chat →
 
 **Layer (Home+):** Close tab, Terminal, Interrupt, Command Palette, Run (F5), Find, Switch tabs
 
-See the [VS Code Guide](../docs/vscode-guide.md) for the full workflow and voice input setup.
+See the [VS Code Guide](vscode-guide.md) for the full workflow and voice input setup.
 
 ## Creating Your Own
 
@@ -54,5 +54,5 @@ gamepad-mapper --profile myprofile --edit
 gamepad-mapper --profile myprofile --setup
 ```
 
-See [Configuration docs](../docs/configuration.md) for button names, key names, and format reference.
+See [Configuration docs](configuration.md) for button names, key names, and format reference.
 

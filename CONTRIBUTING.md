@@ -46,7 +46,7 @@ profiles/              Example profile JSON files
 ## Adding a Profile
 
 1. Create a new JSON file in `profiles/`
-2. Add a description to `profiles/README.md`
+2. Add a description to `docs/profiles.md`
 3. Optionally add a dedicated guide in `docs/`
 
 ## Guidelines

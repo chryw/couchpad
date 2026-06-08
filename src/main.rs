@@ -148,7 +148,13 @@ fn main() {
 
     // Handle --info flag
     if args.iter().any(|a| a == "--info") {
-        print_info(profile.as_deref(), config_path, layout_override);
+        print_info(profile.as_deref(), config_path.clone(), layout_override);
+        return;
+    }
+
+    // Handle --validate flag
+    if args.iter().any(|a| a == "--validate") {
+        validate_profile(profile.as_deref(), config_path);
         return;
     }
 
@@ -424,6 +430,79 @@ fn face_button_labels(layout: Layout) -> [&'static str; 4] {
     }
 }
 
+fn validate_profile(profile: Option<&str>, config_path: Option<PathBuf>) {
+    let config = match config::Config::load_profile(profile, config_path) {
+        Ok(cfg) => cfg,
+        Err(e) => {
+            eprintln!("✗ Failed to load config: {}", e);
+            std::process::exit(1);
+        }
+    };
+
+    let keycode_map = keymap::build_keycode_map();
+    let mut errors: Vec<String> = Vec::new();
+    let mut warnings: Vec<String> = Vec::new();
+
+    // Validate layer button
+    if parse_button(&config.layer_button).is_none() {
+        errors.push(format!("layer_button: unknown button \"{}\"", config.layer_button));
+    }
+
+    // Validate base mappings
+    for (button, combo) in &config.mappings {
+        if parse_button(button).is_none() {
+            errors.push(format!("mappings: unknown button \"{}\"", button));
+        }
+        if keymap::parse_key_combo(combo, &keycode_map).is_none() {
+            errors.push(format!("mappings: invalid key combo \"{}\" for button \"{}\"", combo, button));
+        }
+    }
+
+    // Validate layer mappings
+    for (button, combo) in &config.layer_mappings {
+        if parse_button(button).is_none() {
+            errors.push(format!("layer_mappings: unknown button \"{}\"", button));
+        }
+        if keymap::parse_key_combo(combo, &keycode_map).is_none() {
+            errors.push(format!("layer_mappings: invalid key combo \"{}\" for button \"{}\"", combo, button));
+        }
+    }
+
+    // Check for duplicate button in both layers (warning, not error)
+    for button in config.mappings.keys() {
+        if config.layer_mappings.contains_key(button) {
+            // This is actually fine — base vs layer are separate
+        }
+    }
+
+    // Check for layer button also mapped
+    if config.mappings.contains_key(&config.layer_button) {
+        warnings.push(format!("layer_button \"{}\" is also mapped in base layer (it will only activate the layer)", config.layer_button));
+    }
+
+    // Report results
+    if errors.is_empty() && warnings.is_empty() {
+        println!("✓ Profile is valid ({} base + {} layer mappings)",
+            config.mappings.len(), config.layer_mappings.len());
+    } else {
+        if !errors.is_empty() {
+            eprintln!("✗ {} error(s):", errors.len());
+            for e in &errors {
+                eprintln!("   • {}", e);
+            }
+        }
+        if !warnings.is_empty() {
+            println!("⚠ {} warning(s):", warnings.len());
+            for w in &warnings {
+                println!("   • {}", w);
+            }
+        }
+        if !errors.is_empty() {
+            std::process::exit(1);
+        }
+    }
+}
+
 fn run_test_mode(profile: Option<&str>, config_path: Option<PathBuf>, layout_override: Option<Layout>) {
     let mut gilrs = Gilrs::new().unwrap_or_else(|e| { eprintln!("Error: Failed to initialize gamepad library: {}", e); std::process::exit(1); });
 
@@ -664,7 +743,7 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
     println!();
 
     println!("  Pick actions to map, then press a controller button.");
-    println!("  Type 's' to skip, 'q' to finish and save.\n");
+    println!("  Type 'q' to finish and save. Unresponded prompts auto-skip after 15s.\n");
 
     println!("  Available actions:");
     println!("  ─────────────────────────────────────────────────────");
@@ -699,7 +778,7 @@ fn run_setup(profile: Option<&str>, layout_override: Option<Layout>) {
 
         let (name, combo, _) = actions[idx];
         println!("\n  → Mapping: {} ({})", name, combo);
-        println!("    Press the controller button you want to use (or 's' to skip)...");
+        println!("    Press the controller button you want to use (auto-skips after 15s)...");
 
         // Wait for button press
         let mut skipped = false;

@@ -82,7 +82,7 @@ gamepad-mapper --profile vscode
 |-----|-------------|
 | [Configuration](docs/configuration.md) | Config format, button names, key names, layers, cross-platform |
 | [VS Code Guide](docs/vscode-guide.md) | Vibe coding with Copilot Chat + voice input |
-| [Profiles README](profiles/README.md) | Profile installation and descriptions |
+| [Profiles](docs/profiles.md) | Profile installation and descriptions |
 
 ## Permissions
 

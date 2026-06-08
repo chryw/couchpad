@@ -9,6 +9,7 @@ OPTIONS:
   --setup                Interactive setup wizard (pick actions, press buttons)
   --edit                 Open config in your default editor
   --info                 Show controller info and keymap table
+  --validate             Validate profile config (check buttons and keys)
   --test                 Test mode: show button presses without emitting keys
   --list                 List available profiles (pick to run)
   --config <path>        Use a custom config file path
@@ -23,4 +24,5 @@ EXAMPLES:
   gamepad-mapper --edit                 Open config in default editor
   gamepad-mapper --test                 See raw button names from controller
   gamepad-mapper --info                 View current config and controller
+  gamepad-mapper --validate             Check profile for errors
   gamepad-mapper --list                 Pick and run a profile interactively
