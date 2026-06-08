@@ -38,7 +38,7 @@ cargo install --path .
 ## Quick start
 
 1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
-2. Run:
+2. Open a terminal and run:
 
 ```bash
 # Use a built-in profile (works immediately, no setup needed)
@@ -50,6 +50,8 @@ gamepad-mapper --setup
 # See all options
 gamepad-mapper --help
 ```
+
+Keep the terminal open — the tool runs in the foreground and maps buttons until you press Ctrl+C.
 
 > **macOS:** On first run, grant Accessibility permission to your terminal app:
 > System Settings → Privacy & Security → Accessibility
