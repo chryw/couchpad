@@ -49,7 +49,9 @@ gamepad-mapper --profile vscode --edit
 
 ### Base layer (normal presses)
 
-| Button | Action | VS Code Function |
+> Shortcuts shown as macOS keys. On Windows, `Cmd` = `Ctrl` (the profile uses `super` internally).
+
+| Button | Action | Shortcut |
 |--------|--------|------------------|
 | A | Enter | Send message / confirm |
 | B | Escape | Dismiss panel / cancel |
@@ -67,7 +69,7 @@ gamepad-mapper --profile vscode --edit
 
 ### Layer (Home + button)
 
-| Button | Action | VS Code Function |
+| Button | Action | Shortcut |
 |--------|--------|------------------|
 | A | Save | `Cmd+S` |
 | B | Close tab | `Cmd+W` |

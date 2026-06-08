@@ -2,11 +2,11 @@
 
 ## Profile location
 
-Profiles are JSON files stored in:
+When you customize or create profiles, they're stored as JSON files in:
 - **macOS:** `~/Library/Application Support/gamepad-mapper/<name>.json`
 - **Windows:** `%APPDATA%/gamepad-mapper/<name>.json`
 
-Use `--profile <name>` to select a profile. Omit it to use `default.json`.
+Local profiles take priority over built-in ones with the same name.
 
 ## Getting started
 
@@ -173,8 +173,8 @@ Detected as Switch: controllers with "Nintendo", "Switch", "Pro Controller", or 
 ## Creating your own profile
 
 ```bash
-# Start from an existing profile
-cp profiles/default.json ~/Library/Application\ Support/gamepad-mapper/myprofile.json
+# Create a new empty profile
+gamepad-mapper --profile myprofile --init
 
 # Edit it
 gamepad-mapper --profile myprofile --edit

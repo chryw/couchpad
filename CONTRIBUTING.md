@@ -45,8 +45,9 @@ profiles/              Built-in profile JSON files
 ## Adding a profile
 
 1. Create a new JSON file in `profiles/`
-2. Add a description to the "Using Built-in Profiles" section in `docs/profile-reference.md`
-3. Optionally add a dedicated guide in `docs/`
+2. Register it in `src/profile.rs` in the `builtin_profile()` and `builtin_profile_names()` functions
+3. Add a description to the "Built-in profiles" section in `docs/profile-reference.md`
+4. Optionally add a dedicated guide in `docs/`
 
 ## Guidelines
 
