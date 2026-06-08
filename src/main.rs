@@ -657,6 +657,9 @@ fn print_help() {
     print!("{}", include_str!("../docs/help/keys.md"));
     println!();
     print!("{}", include_str!("../docs/help/tips.md"));
+    println!();
+    println!("MORE INFO:");
+    println!("  https://github.com/YOUR_USERNAME/gamepad-mapper#readme");
 }
 
 fn open_profile(profile: Option<&str>) {
