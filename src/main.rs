@@ -536,128 +536,19 @@ fn print_info(profile: Option<&str>, config_path: Option<PathBuf>, layout_overri
 }
 
 fn print_help() {
-    println!(r#"🎮 Gamepad Mapper
-   Map game controller buttons to keyboard shortcuts.
-
-USAGE:
-   gamepad-mapper [OPTIONS]
-
-OPTIONS:
-   (no flags)             Start the mapper with the default profile
-   --profile <name>       Use a specific profile
-   --layout <type>        Override controller layout (xbox or switch, auto-detected)
-   --init                 Create a new profile config file
-   --setup                Interactive setup wizard (pick actions, press buttons)
-   --edit                 Open config in your default editor
-   --info                 Show controller info and keymap table
-   --test                 Test mode: show button presses without emitting keys
-   --list                 List available profiles (pick to run)
-   --config <path>        Use a custom config file path
-   --help, -h             Show this help message
-
-EXAMPLES:
-   gamepad-mapper                        Start with default profile
-   gamepad-mapper --profile vscode       Start with "vscode" profile
-   gamepad-mapper --setup                Interactive wizard to map buttons
-   gamepad-mapper --init                 Create default profile config
-   gamepad-mapper --profile gaming --init Create a new "gaming" profile
-   gamepad-mapper --edit                 Open config in default editor
-   gamepad-mapper --test                 See raw button names from controller
-   gamepad-mapper --info                 View current config and controller
-   gamepad-mapper --list                 Pick and run a profile interactively
-
-CONFIG:
-   Profiles are stored in:
-     macOS:   ~/Library/Application Support/gamepad-mapper/<profile>.json
-     Windows: %APPDATA%/gamepad-mapper/<profile>.json
-
-   Config format:
-   {{
-     "layer_button": "Home",
-     "mappings": {{
-       "A": "return",
-       "DPadUp": "up",
-       "LT": "super+shift+p"
-     }},
-     "layer_mappings": {{
-       "A": "super+s",
-       "DPadUp": "alt+up"
-     }}
-   }}
-
-BUTTON NAMES:
-   A, B, X, Y             Face buttons
-   DPadUp/Down/Left/Right D-pad
-   LB, RB                 Bumpers (shoulders)
-   LT, RT                 Triggers
-   LS, RS                 Thumbstick clicks
-   Select, Start          Menu buttons
-   Home                   Home/Mode button
-
-KEY NAMES:
-   Letters: a-z            Numbers: 0-9
-   Modifiers: super, ctrl, shift, alt, cmd
-   Special: return, escape, tab, space, backspace
-   Arrows: up, down, left, right
-   Function: f1-f12
-   Punctuation: [, ], -, =, ;, ', ,, ., /, \, `
-
-   "super" maps to Cmd on macOS and Ctrl on Windows.
-   Combine with +: "super+shift+p", "alt+up", "ctrl+cmd+i"
-
-GETTING STARTED:
-
-   Step 1: Pair your Bluetooth controller
-   ─────────────────────────────────────────
-   macOS:
-     1. Put your controller in pairing mode (usually hold Home/Mode
-        until LED blinks rapidly)
-     2. Open System Settings → Bluetooth
-     3. Find your controller in the device list and click "Connect"
-     4. Wait for status to show "Connected"
-
-   Windows:
-     1. Put your controller in pairing mode
-     2. Open Settings → Bluetooth & devices → Add device
-     3. Select your controller and pair
-
-   Step 2: Set up gamepad-mapper
-   ─────────────────────────────────────────
-     Option A — Interactive wizard (recommended for beginners):
-     $ gamepad-mapper --setup             # Pick actions, press buttons
-
-     Option B — Manual setup:
-     $ gamepad-mapper --init              # Create default config
-     $ gamepad-mapper --info              # Verify controller is detected
-     $ gamepad-mapper --test              # Press buttons to see their names
-     $ gamepad-mapper --edit              # Open config to customize
-
-   Step 3: Customize your mappings
-   ─────────────────────────────────────────
-     Edit the config file shown by --info. Map button names (from --test)
-     to key combos you want to emit.
-
-   Step 4: Grant permissions (macOS only)
-   ─────────────────────────────────────────
-     The first time you run, macOS will ask for Accessibility permission.
-     Go to: System Settings → Privacy & Security → Accessibility
-     Toggle ON your terminal app (Terminal, iTerm2, or VS Code).
-
-   Step 5: Run!
-   ─────────────────────────────────────────
-     $ gamepad-mapper                     # Start with default profile
-     $ gamepad-mapper --profile vscode    # Start with a named profile
-     Press Ctrl+C to stop.
-
-NOTES:
-   • Use --setup for an interactive guided experience (no manual editing)
-   • Use --test to discover button names for your specific controller
-   • Use --info to verify your config and see the full keymap at a glance
-   • Use --edit to open config in your default editor
-   • Use --list to pick and run a profile interactively
-   • Use --help to see this guide again
-   • Hold the layer button + another button for alternate mappings
-"#);
+    println!("🎮 Gamepad Mapper");
+    println!("   Map game controller buttons to keyboard shortcuts.\n");
+    print!("{}", include_str!("../docs/help/usage.txt"));
+    println!();
+    print!("{}", include_str!("../docs/help/config.txt"));
+    println!();
+    print!("{}", include_str!("../docs/help/buttons.txt"));
+    println!();
+    print!("{}", include_str!("../docs/help/keys.txt"));
+    println!();
+    print!("{}", include_str!("../docs/help/getting-started.txt"));
+    println!();
+    print!("{}", include_str!("../docs/help/tips.txt"));
 }
 
 fn open_config(profile: Option<&str>) {
