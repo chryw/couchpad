@@ -10,28 +10,32 @@ Perfect for couch coding with [Copilot Chat](docs/vscode-guide.md) + voice input
 
 1. Pair your Bluetooth controller (System Settings → Bluetooth on macOS, Settings → Bluetooth on Windows)
 
-2. Download the binary for your platform from [Releases](../../releases)
+2. Install — paste in your terminal:
 
-3. Open a terminal and run it:
-
+   **macOS (Apple Silicon):**
    ```bash
-   # macOS — rename, make executable, run
-   mv gamepad-mapper-macos-arm64 gamepad-mapper
-   chmod +x gamepad-mapper
-   ./gamepad-mapper
+   curl -fsSL https://github.com/YOUR_USERNAME/gamepad-mapper/releases/latest/download/gamepad-mapper-macos-arm64 -o /usr/local/bin/gamepad-mapper && chmod +x /usr/local/bin/gamepad-mapper
    ```
 
+   **macOS (Intel):**
+   ```bash
+   curl -fsSL https://github.com/YOUR_USERNAME/gamepad-mapper/releases/latest/download/gamepad-mapper-macos-x86_64 -o /usr/local/bin/gamepad-mapper && chmod +x /usr/local/bin/gamepad-mapper
+   ```
+
+   **Windows (PowerShell):**
    ```powershell
-   # Windows — rename and run
-   ren gamepad-mapper-windows-x86_64.exe gamepad-mapper.exe
-   .\gamepad-mapper.exe
+   Invoke-WebRequest -Uri "https://github.com/YOUR_USERNAME/gamepad-mapper/releases/latest/download/gamepad-mapper-windows-x86_64.exe" -OutFile "$env:LOCALAPPDATA\gamepad-mapper.exe"
+   ```
+
+3. Run:
+
+   ```bash
+   gamepad-mapper
    ```
 
    On first run, you'll be prompted to choose: interactive wizard, a pre-made VS Code profile, or basic defaults.
 
 Keep the terminal open — the tool runs in the foreground and maps buttons until you press Ctrl+C.
-
-> **Tip:** Run `--install` to copy the binary to your PATH so you can call `gamepad-mapper` from anywhere without typing the full path.
 
 > **macOS:** On first run, grant Accessibility permission to your terminal app:
 > System Settings → Privacy & Security → Accessibility
