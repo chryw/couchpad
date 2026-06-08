@@ -3,8 +3,8 @@
   "mappings": {
     "A": "return",
     "B": "escape",
-    "Y": "tab",
     "X": "space",
+    "Y": "tab",
     "DPadUp": "up",
     "DPadDown": "down",
     "DPadLeft": "left",
@@ -13,23 +13,27 @@
     "RB": "tab",
     "LT": "super+shift+p",
     "RT": "super+p",
+    "LS": "f12",
+    "RS": "super+/",
     "Select": "super+shift+e",
-    "Start": "super+s",
-    "LS": "super+z",
-    "RS": "super+shift+z"
+    "Start": "super+s"
   },
   "layer_mappings": {
     "A": "super+s",
     "B": "super+w",
-    "Y": "super+shift+p",
-    "X": "super+n",
+    "X": "ctrl+c",
+    "Y": "ctrl+`",
     "DPadUp": "alt+up",
     "DPadDown": "alt+down",
     "DPadLeft": "super+shift+[",
     "DPadRight": "super+shift+]",
-    "LB": "super+shift+z",
-    "RB": "super+z",
-    "Select": "ctrl+super+i",
-    "Start": "super+shift+x"
+    "LB": "super+z",
+    "RB": "super+shift+z",
+    "LT": "ctrl+super+i",
+    "RT": "f5",
+    "LS": "super+f",
+    "RS": "super+n",
+    "Select": "super+shift+x",
+    "Start": "super+shift+p"
   }
 }
