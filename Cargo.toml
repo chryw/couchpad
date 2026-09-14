@@ -8,7 +8,7 @@ description = "A minimal CLI tool that maps gamepad/controller inputs to keyboar
 gilrs = "0.11"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-dirs = "6"
+dirs = "7"
 ctrlc = "3.5.2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
